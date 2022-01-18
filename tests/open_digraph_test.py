@@ -46,6 +46,9 @@ class NodeTest(unittest.TestCase):
     def test_set_label(self):
         self.n0.set_label("h")
         self.assertEqual(self.n0.get_label, "h")
+    
+    def test_set_parent_ids(self):
+        self.n0.set_parent_ids({5: 2, 1: 4, 3: 1})
 
     def test_copy(self):
         nc = self.n0.copy()
