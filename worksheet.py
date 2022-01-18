@@ -13,8 +13,8 @@ if __name__ == '__main__':  # the following code is called only when
     o1 = Node(6, 'o1', {2: 1}, {})
 
     G = open_digraph([3, 4], [5, 6], [n0, n1, n2, i0, i1, o0, o1])
-    
-    # Add edges
-    #g.add_edges([(0,1),(0,2),(1,5),(1,2),(1,2),(2,6),(3,0),(4,0)])
-    
+    G.add_node("d",[2],[])
+    G.add_edge(0, 1)
+    G.add_edge(7, 2)
+
     G.dessine()
