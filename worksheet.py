@@ -1,5 +1,4 @@
 from modules.open_digraph import *
-from inspect import *
 
 if __name__ == '__main__':  # the following code is called only when
 
@@ -14,5 +13,8 @@ if __name__ == '__main__':  # the following code is called only when
     o1 = Node(6, 'o1', {2: 1}, {})
 
     G = open_digraph([3, 4], [5, 6], [n0, n1, n2, i0, i1, o0, o1])
-
-    print(getdoc(open_digraph))
+    
+    # Add edges
+    #g.add_edges([(0,1),(0,2),(1,5),(1,2),(1,2),(2,6),(3,0),(4,0)])
+    
+    G.dessine()

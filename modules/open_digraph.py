@@ -1,5 +1,5 @@
 from numpy import ma
-
+import igraph as ig
 
 class Node:
     """
@@ -210,3 +210,23 @@ class open_digraph:  # for open directed graph
             self.add_edge(parent_id, id)
         for child_id in children:
             self.add_edge(id, child_id)
+
+    def dessine(self,name="mygraph"):
+
+        nodes = self.get_nodes
+        ipt = self.get_input_ids
+        opt = self.get_output_ids
+        g = ig.Graph(directed=True)
+        g.add_vertices(len(nodes))    
+        ids = self.get_node_ids
+    
+        for i in range(len(ids)):
+            g.vs[i]["id"]= ids[i]
+            g.vs[i]["label"]= nodes[i].label
+        
+        for node in nodes:
+            for idc in node.get_children_ids:
+                for i in range(node.get_children_id_mult(idc)):
+                    g.add_edge(node.get_id,idc)
+
+        g.write(name+".dot")
