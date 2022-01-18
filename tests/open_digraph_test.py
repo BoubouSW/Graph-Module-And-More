@@ -46,14 +46,22 @@ class NodeTest(unittest.TestCase):
     def test_set_label(self):
         self.n0.set_label("h")
         self.assertEqual(self.n0.get_label, "h")
-    
+
     def test_set_parent_ids(self):
         self.n0.set_parent_ids({5: 2, 1: 4, 3: 1})
-        self.assertEqual(self.n0.get_parent_ids, [5,1,3])
-    
+        self.assertEqual(self.n0.get_parent_ids, [5, 1, 3])
+
     def test_set_children_ids(self):
         self.n0.set_children_ids({1: 4, 6: 3, 2: 1})
-        self.assertEqual(self.n0.get_children_ids, [1,6,2])
+        self.assertEqual(self.n0.get_children_ids, [1, 6, 2])
+
+    def test_add_child_id(self):
+        self.n0.add_child_id(4, 2)
+        self.assertEqual(self.n0.children, {1: 2, 2: 1, 3: 1, 4: 2})
+
+    def test_add_parent_id(self):
+        self.n0.add_parent_id(2, 2)
+        self.assertEqual(self.n0.parents, {1: 1, 2: 2})
 
     def test_copy(self):
         nc = self.n0.copy()
@@ -63,16 +71,8 @@ class NodeTest(unittest.TestCase):
         self.assertIsNot(nc.parents, self.n0.parents)
         self.assertIsNot(nc.children, self.n0.children)
 
-    def test_add_child_id(self):
-        self.n0.add_child_id(4, 2)
-        self.assertEqual(self.n0.children, {1: 2, 2: 1, 3: 1, 4 : 2})
 
-    def test_add_parent_id(self):
-        self.n0.add_parent_id(2, 2)
-        self.assertEqual(self.n0.parents, {1: 1, 2: 2})
-
-
-class Digraph(unittest.TestCase):
+class DigraphTest(unittest.TestCase):
     def setUp(self):
         self.n0 = Node(0, "a", {3: 1, 4: 1}, {1: 1, 2: 1})
         self.n1 = Node(1, "b", {0: 1}, {2: 2, 5: 1})
