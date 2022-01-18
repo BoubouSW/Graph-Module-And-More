@@ -1,13 +1,3 @@
-from lib2to3.pytree import Node
-from multiprocessing import parent_process
-from shutil import register_unpack_format
-from tokenize import String
-from attrs import setters
-from black import re
-
-from urllib3 import Retry
-
-
 class Node:
     def __init__(self, identity: int, label: str, parents: dict, children: dict):
         '''
