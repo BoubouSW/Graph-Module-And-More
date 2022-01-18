@@ -1,7 +1,11 @@
+from numpy import ma
+
+
 class Node:
     """
     Doc de la classe Node à compléter ...
     """
+
     def __init__(self, identity: int, label: str, parents: dict, children: dict):
         '''
         identity: int; its unique id in the graph
@@ -59,6 +63,18 @@ class Node:
             tab.append(p)
         return tab
 
+    def get_children_id_mult(self, id):
+        if(id in self.children):
+            return self.children[id]
+        else:
+            return 0
+
+    def get_parent_id_mult(self, id):
+        if(id in self.parents):
+            return self.parents[id]
+        else:
+            return 0
+
     def set_id(self, id):
         self.id = id
 
@@ -87,6 +103,7 @@ class open_digraph:  # for open directed graph
     """
     Doc de la classe open_digraph à compléter ...
     """
+
     def __init__(self, inputs: list, outputs: list, nodes: list):
         '''
         inputs: int list; the ids of the input nodes
@@ -157,6 +174,13 @@ class open_digraph:  # for open directed graph
     def add_output_id(self, id):
         self.outputs.append(id)
 
+    def new_id(self):
+        max = 0
+        for key in self.nodes.keys():
+            if(key > max):
+                max = key
+        return key + 1
+
     @classmethod
     def empty(cls):
         return cls([], [], [])
@@ -166,3 +190,23 @@ class open_digraph:  # for open directed graph
         o = self.outputs.copy()
         l_n = [node for node in self.nodes.values()]
         return open_digraph(i, o, l_n)
+
+    def add_edge(self, src, tgt):
+        id = self.nodes.keys()
+        if(not(src in id and tgt in id)):
+            raise(Exception())
+        else:
+            src_children_mult = self.nodes[src].get_children_id_mult(tgt)
+            tgt_parent_mult = self.nodes[tgt].get_parent_id_mult(src)
+            self.nodes[tgt].add_parent_id(src,
+                                          src_children_mult + 1)
+            self.nodes[src].add_child_id(tgt,
+                                         tgt_parent_mult + 1)
+
+    def add_node(self, label="", parents=[], children=[]):
+        id = self.new_id()
+        self.nodes[id] = Node(id, label, {}, {})
+        for parent_id in parents:
+            self.add_edge(parent_id, id)
+        for child_id in children:
+            self.add_edge(id, child_id)

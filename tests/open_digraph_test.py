@@ -1,3 +1,4 @@
+from traceback import print_tb
 from modules.open_digraph import *
 import unittest
 import sys
@@ -38,6 +39,12 @@ class NodeTest(unittest.TestCase):
 
     def test_get_children_ids(self):
         self.assertEqual(self.n0.get_children_ids, [1, 2, 3])
+
+    def test_get_children_id_mult(self):
+        self.assertEqual(self.n0.get_children_id_mult(1), 2)
+        self.assertEqual(self.n0.get_children_id_mult(2), 1)
+        self.assertEqual(self.n0.get_children_id_mult(3), 1)
+        self.assertEqual(self.n0.get_children_id_mult(4), 0)
 
     def test_set_id(self):
         self.n0.set_id(7)
@@ -134,11 +141,35 @@ class DigraphTest(unittest.TestCase):
         self.assertEqual(open_digraph.empty().outputs, [])
         self.assertEqual(open_digraph.empty().nodes, {})
 
+    def test_new_id(self):
+        id_list = self.G.get_node_ids
+        new_id = self.G.new_id()
+        self.assertFalse(new_id in id_list)
+
     def test_copy(self):
         dc = self.G.copy()
         self.assertIsNot(dc.inputs, self.G.inputs)
         self.assertIsNot(dc.outputs, self.G.outputs)
         self.assertIsNot(dc.nodes, self.G.nodes)
+
+    def test_add_edge(self):
+        self.G.add_edge(1, 2)
+        self.assertEqual(self.G.get_node_by_id(1).get_children_id_mult(2), 3)
+        self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(1), 3)
+        self.G.add_edge(2, 1)
+        self.assertEqual(self.G.get_node_by_id(2).get_children_id_mult(1), 1)
+        self.assertEqual(self.G.get_node_by_id(1).get_parent_id_mult(2), 1)
+
+    def test_add_node(self):
+        id = self.G.new_id()
+        self.G.add_node(label='d', parents=[0, 0], children=[2])
+        node_create = self.G.get_node_by_id(id)
+        self.assertEqual(node_create.get_label, 'd')
+        self.assertEqual(node_create.get_id, id)
+        self.assertEqual(node_create.get_children_id_mult(2), 1)
+        self.assertEqual(node_create.get_parent_id_mult(0), 2)
+        self.assertEqual(self.G.get_node_by_id(0).get_children_id_mult(id), 2)
+        self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(id), 1)
 
 
 if __name__ == "__main__":  # the following code is called only when
