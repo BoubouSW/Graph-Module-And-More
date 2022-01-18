@@ -44,11 +44,17 @@ class Node:
 
     @property
     def get_parent_ids(self):
-        return [p.id for p in self.parents]
+        tab = []
+        for p in self.parents.keys():
+            tab.append(p)
+        return tab
 
     @property
     def get_children_ids(self):
-        return [p.id for p in self.children]
+        tab = []
+        for p in self.children.keys():
+            tab.append(p)
+        return tab
 
     def set_id(self, id):
         self.id = id
@@ -112,17 +118,21 @@ class open_digraph:  # for open directed graph
 
     @property
     def get_nodes(self):
-        return self.nodes.values()
+        tab = []
+        for k in self.nodes.values():
+            tab.append(k)
+        return tab
 
     @property
     def get_node_ids(self):
-        return self.nodes.keys()
+        tab = []
+        for k in self.nodes.keys():
+            tab.append(k)
+        return tab
 
-    @property
     def get_node_by_id(self, k: int):
         return self.nodes[k]
 
-    @property
     def get_nodes_by_ids(self, liste: list):
         tab = []
         for i in liste:
