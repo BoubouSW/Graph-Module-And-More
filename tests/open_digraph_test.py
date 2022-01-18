@@ -63,6 +63,14 @@ class NodeTest(unittest.TestCase):
         self.assertIsNot(nc.parents, self.n0.parents)
         self.assertIsNot(nc.children, self.n0.children)
 
+    def test_add_child_id(self):
+        self.n0.add_child_id(4, 2)
+        self.assertEqual(self.n0.children, {1: 2, 2: 1, 3: 1, 4 : 2})
+
+    def test_add_parent_id(self):
+        self.n0.add_parent_id(2, 2)
+        self.assertEqual(self.n0.parents, {1: 1, 2: 2})
+
 
 class Digraph(unittest.TestCase):
     def setUp(self):
