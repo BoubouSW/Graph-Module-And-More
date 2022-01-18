@@ -18,3 +18,4 @@ if __name__ == '__main__':  # the following code is called only when
     G.add_edge(7, 2)
 
     G.dessine()
+

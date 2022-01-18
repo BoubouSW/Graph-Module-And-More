@@ -177,7 +177,7 @@ class open_digraph:  # for open directed graph
         for key in self.nodes.keys():
             if key > max:
                 max = key
-        return key + 1
+        return max + 1
 
     @classmethod
     def empty(cls):
