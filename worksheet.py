@@ -1,7 +1,8 @@
-from traceback import print_tb
 from modules.open_digraph import *
+from inspect import *
 
 if __name__ == '__main__':  # the following code is called only when
+
     n0 = Node(0, 'a', {3: 1, 4: 1}, {1: 1, 2: 1})
     n1 = Node(1, 'b', {0: 1}, {2: 2, 5: 1})
     n2 = Node(2, 'c', {0: 1, 1: 2}, {6: 1})
@@ -14,4 +15,4 @@ if __name__ == '__main__':  # the following code is called only when
 
     G = open_digraph([3, 4], [5, 6], [n0, n1, n2, i0, i1, o0, o1])
 
-    print(n0.get_parent_ids)
+    print(getdoc(Node))

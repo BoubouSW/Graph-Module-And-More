@@ -1,4 +1,7 @@
 class Node:
+    """
+    Doc de la classe Node à compléter ...
+    """
     def __init__(self, identity: int, label: str, parents: dict, children: dict):
         '''
         identity: int; its unique id in the graph
@@ -81,6 +84,9 @@ class Node:
 
 
 class open_digraph:  # for open directed graph
+    """
+    Doc de la classe open_digraph à compléter ...
+    """
     def __init__(self, inputs: list, outputs: list, nodes: list):
         '''
         inputs: int list; the ids of the input nodes
@@ -145,11 +151,11 @@ class open_digraph:  # for open directed graph
     def set_output_ids(self, value):
         self.outputs = value
 
-    def add_input_ids(self, id, value):
-        self.inputs[id] = value
+    def add_input_id(self, id):
+        self.inputs.append(id)
 
-    def add_output_id(self, id, value):
-        self.output[id] = value
+    def add_output_id(self, id):
+        self.outputs.append(id)
 
     @classmethod
     def empty(cls):

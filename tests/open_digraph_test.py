@@ -25,19 +25,27 @@ class InitTest(unittest.TestCase):
 
 class NodeTest(unittest.TestCase):
     def setUp(self):
-        self.n0 = Node(0, "a", {1:1}, {1:2,2:1,3:1})
+        self.n0 = Node(0, "a", {1: 1}, {1: 2, 2: 1, 3: 1})
 
     def test_get_id(self):
         self.assertEqual(self.n0.get_id, 0)
 
     def test_get_label(self):
         self.assertEqual(self.n0.get_label, "a")
-    
+
     def test_get_parent_ids(self):
         self.assertEqual(self.n0.get_parent_ids, [1])
 
     def test_get_children_ids(self):
-        self.assertEqual(self.n0.get_children_ids, [1,2,3])
+        self.assertEqual(self.n0.get_children_ids, [1, 2, 3])
+
+    def test_set_id(self):
+        self.n0.set_id(7)
+        self.assertEqual(self.n0.get_id, 7)
+
+    def test_set_label(self):
+        self.n0.set_label("h")
+        self.assertEqual(self.n0.get_label, "h")
 
     def test_copy(self):
         nc = self.n0.copy()
@@ -60,7 +68,11 @@ class Digraph(unittest.TestCase):
         self.o0 = Node(5, "o0", {1: 1}, {})
         self.o1 = Node(6, "o1", {2: 1}, {})
 
-        self.G = open_digraph([3, 4], [5, 6], [self.n0, self.n1, self.n2, self.i0, self.i1, self.o0, self.o1])
+        self.G = open_digraph(
+            [3, 4],
+            [5, 6],
+            [self.n0, self.n1, self.n2, self.i0, self.i1, self.o0, self.o1],
+        )
 
     def test_get_input_ids(self):
         self.assertEqual(self.G.get_input_ids, [3, 4])
@@ -84,6 +96,22 @@ class Digraph(unittest.TestCase):
         self.assertEqual(
             self.G.get_nodes_by_ids([0, 1, 2]), [self.n0, self.n1, self.n2]
         )
+
+    def test_set_input_ids(self):
+        self.G.set_input_ids([1, 2, 3])
+        self.assertEqual(self.G.get_input_ids, [1, 2, 3])
+
+    def test_set_output_ids(self):
+        self.G.set_output_ids([4, 5, 6])
+        self.assertEqual(self.G.get_output_ids, [4, 5, 6])
+
+    def test_add_input_id(self):
+        self.G.add_input_id(8)
+        self.assertEqual(8 in self.G.inputs, True)
+
+    def test_add_output_id(self):
+        self.G.add_output_id(9)
+        self.assertEqual(9 in self.G.outputs, True)
 
     def test_empty(self):
         self.assertEqual(open_digraph.empty().inputs, [])
