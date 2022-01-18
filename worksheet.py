@@ -15,4 +15,4 @@ if __name__ == '__main__':  # the following code is called only when
 
     G = open_digraph([3, 4], [5, 6], [n0, n1, n2, i0, i1, o0, o1])
 
-    print(getdoc(Node))
+    print(getdoc(open_digraph))
