@@ -49,6 +49,11 @@ class NodeTest(unittest.TestCase):
     
     def test_set_parent_ids(self):
         self.n0.set_parent_ids({5: 2, 1: 4, 3: 1})
+        self.assertEqual(self.n0.get_parent_ids, [5,1,3])
+    
+    def test_set_children_ids(self):
+        self.n0.set_children_ids({1: 4, 6: 3, 2: 1})
+        self.assertEqual(self.n0.get_children_ids, [1,6,2])
 
     def test_copy(self):
         nc = self.n0.copy()
