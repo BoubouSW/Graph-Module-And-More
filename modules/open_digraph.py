@@ -163,7 +163,7 @@ class open_digraph:  # for open directed graph
         return self.nodes
 
     @property
-    def get_nodes(self) -> Node:
+    def get_nodes(self):
         tab = []
         for k in self.nodes.values():
             tab.append(k)
@@ -177,7 +177,10 @@ class open_digraph:  # for open directed graph
         return tab
 
     def get_node_by_id(self, k: int) -> Node:
-        return self.nodes[k]
+        if(k in self.nodes):
+            return self.nodes[k]
+        else:
+            return None
 
     def get_nodes_by_ids(self, liste: list):
         tab = []
@@ -255,12 +258,13 @@ class open_digraph:  # for open directed graph
         outputs = self.get_output_ids
         nodes_id = self.get_node_ids
         for i in inputs:
-            if not (i in nodes_id):
+            if (not (i in nodes_id)
+                or self.get_node_by_id(i).get_parent_id != 0
+                    or self.get_node_by_id(i).get_children_id_mult != 1):
                 return False
         for o in outputs:
             if not (o in nodes_id):
                 return False
-        
 
     def dessine(self, name="mygraph"):
 

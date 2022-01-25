@@ -246,6 +246,15 @@ class DigraphTest(unittest.TestCase):
         self.assertEqual(self.G.get_node_by_id(2)
                          .get_parent_id_mult(1), 0)
 
+    def test_remove_node_by_id(self):
+        self.G.remove_node_by_id(1)
+        n = self.G.get_node_by_id(1)
+        self.assertEqual(n, None)
+        nodes = self.G.get_nodes
+        for node in nodes:
+            self.assertEqual(node.get_children_id_mult(1), 0)
+            self.assertEqual(node.get_parent_id_mult(1), 0)
+
 
 if __name__ == "__main__":  # the following code is called only when
     unittest.main()  # precisely this file is run0, node)
