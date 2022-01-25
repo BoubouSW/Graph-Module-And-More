@@ -19,4 +19,6 @@ if __name__ == '__main__':  # the following code is called only when
 
     G.remove_node_by_id(1)
     
+    print(G.is_well_formed())
+
     G.dessine()

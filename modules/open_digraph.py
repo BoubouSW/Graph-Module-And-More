@@ -97,29 +97,28 @@ class Node:
         self.parents[id] = value
 
     def copy(self):
-        return Node(self.id, str(self.label),
-                    self.parents.copy(), self.children.copy())
+        return Node(self.id, str(self.label), self.parents.copy(), self.children.copy())
 
     def remove_parent_once(self, id):
         mult = self.get_parent_id_mult(id)
-        if(mult > 1):
+        if mult > 1:
             self.add_parent_id(id, mult - 1)
-        elif(mult == 1):
+        elif mult == 1:
             del self.parents[id]
 
     def remove_child_once(self, id):
         mult = self.get_children_id_mult(id)
-        if(mult > 1):
+        if mult > 1:
             self.add_child_id(id, mult - 1)
-        elif(mult == 1):
+        elif mult == 1:
             del self.children[id]
 
     def remove_parent_id(self, id):
-        if(id in self.parents):
+        if id in self.parents:
             del self.parents[id]
 
     def remove_children_id(self, id):
-        if(id in self.children):
+        if id in self.children:
             del self.children[id]
 
 
@@ -258,12 +257,18 @@ class open_digraph:  # for open directed graph
         outputs = self.get_output_ids
         nodes_id = self.get_node_ids
         for i in inputs:
-            if (not (i in nodes_id)
-                or self.get_node_by_id(i).get_parent_id != 0
-                    or self.get_node_by_id(i).get_children_id_mult != 1):
+            if (
+                not (i in nodes_id)
+                or self.get_parent_id_mult(i) != 0
+                or self.get_children_id_mult(i) != 1
+            ):
                 return False
         for o in outputs:
-            if not (o in nodes_id):
+            if (
+                not (o in nodes_id)
+                or self.get_parent_id_mult(i) != 1
+                or self.get_children_id_mult(i) != 0
+            ):
                 return False
 
     def dessine(self, name="mygraph"):
