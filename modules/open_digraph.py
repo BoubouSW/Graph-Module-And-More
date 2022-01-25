@@ -230,55 +230,86 @@ class open_digraph:  # for open directed graph
             self.add_edge(parent_id, id)
         for child_id in children:
             self.add_edge(id, child_id)
+        return id
 
-    def remove_edge(self, src, tgt):
-        self.get_node_by_id(src).remove_child_once(tgt)
-        self.get_node_by_id(tgt).remove_parent_once(src)
+    def remove_edge(self, *args):
+        for arg in args:
+            src, tgt = arg
+            self.get_node_by_id(src).remove_child_once(tgt)
+            self.get_node_by_id(tgt).remove_parent_once(src)
 
-    def remove_parallel_edge(self, src, tgt):
-        self.get_node_by_id(src).remove_children_id(tgt)
-        self.get_node_by_id(tgt).remove_parent_id(src)
+    def remove_parallel_edge(self, *args):
+        for arg in args:
+            src, tgt = arg
+            self.get_node_by_id(src).remove_children_id(tgt)
+            self.get_node_by_id(tgt).remove_parent_id(src)
 
-    def remove_node_by_id(self, id):
-        node = self.get_node_by_id(id)
-        for child in node.get_children_ids:
-            self.remove_parallel_edge(id, child)
+    def remove_node_by_id(self, *args):
+        for id in args:
+            node = self.get_node_by_id(id)
+            for child in node.get_children_ids:
+                self.remove_parallel_edge((id, child))
 
-        for parent in node.get_parent_ids:
-            self.remove_parallel_edge(parent, id)
+            for parent in node.get_parent_ids:
+                self.remove_parallel_edge((parent, id))
+            if id in self.get_input_ids:
+                inputs = self.get_input_ids
+                inputs.remove(id)
+                self.set_input_ids(inputs)
 
-        self.nodes.pop(id)
+            if id in self.get_output_ids:
+                outputs = self.get_output_ids
+                outputs.remove(id)
+                self.set_output_ids(outputs)
+            self.nodes.pop(id)
 
     def is_well_formed(self):
         inputs = self.get_input_ids
         outputs = self.get_output_ids
         nodes_id = self.get_node_ids
         for i in inputs:
+            if not (i in nodes_id):
+                return False
             child = self.get_node_by_id(i).get_children_ids
             if (
-                not (i in nodes_id)
-                or self.get_node_by_id(i).get_parent_ids != []
+                self.get_node_by_id(i).get_parent_ids != []
                 or len(child) != 1
                 or self.get_node_by_id(i).get_children_id_mult(child[0]) != 1
             ):
                 return False
         for o in outputs:
+            if not (o in nodes_id):
+                return False
             parent = self.get_node_by_id(o).get_parent_ids
             if (
-                not (o in nodes_id)
-                or self.get_node_by_id(o).get_children_ids != []
+                self.get_node_by_id(o).get_children_ids != []
                 or len(parent) != 1
                 or self.get_node_by_id(o).get_parent_id_mult(parent[0]) != 1
             ):
                 return False
 
         for id in nodes_id:
-            if(id != self.get_node_by_id(id).get_id):
+            if id != self.get_node_by_id(id).get_id:
                 return False
         return True
 
-    def dessine(self, name="mygraph"):
+    def add_input_node(self, id):
+        if id in self.get_input_ids:
+            raise (Exception("can't add input on input"))
+        new_id = self.add_node(label="i", children=[id])
+        inputs = self.get_input_ids
+        inputs.append(new_id)
+        self.set_input_ids(inputs)
 
+    def add_output_node(self, id):
+        if id in self.get_output_ids:
+            raise(Exception("can't add output on output"))
+        new_id = self.add_node(label="o", parents=[id])
+        output = self.get_output_ids
+        output.append(new_id)
+        self.set_output_ids(output)
+
+    def dessine(self, name="mygraph"):
         nodes = self.get_nodes
         ipt = self.get_input_ids
         opt = self.get_output_ids

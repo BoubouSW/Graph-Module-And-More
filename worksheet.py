@@ -17,8 +17,16 @@ if __name__ == '__main__':  # the following code is called only when
     G.add_edge(0, 1)
     G.add_edge(7, 2)
 
-    #G.remove_node_by_id(1)
-    
-    print(G.is_well_formed())
+    #G.remove_edge((2,7),(7,2))
 
+    # print(G.is_well_formed())
+    # G.remove_node_by_id(1)
+    # print(G.is_well_formed())
+    # G.remove_node_by_id(5)
+    #G.remove_parallel_edge((0,1),(1,2))
+    G.remove_node_by_id(3,6)
+    G.add_input_node(0)
+    G.add_output_node(7)
+    #G.add_output_node(9)
+    print(G.is_well_formed())
     G.dessine()
