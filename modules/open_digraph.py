@@ -1,6 +1,3 @@
-from audioop import mul
-from traceback import print_tb
-from numpy import ma
 import igraph as ig
 
 
@@ -262,17 +259,21 @@ class open_digraph:  # for open directed graph
                 not (i in nodes_id)
                 or self.get_node_by_id(i).get_parent_ids != []
                 or len(child) != 1
-                or self.get_node_by_id(i).get_parent_id_mult(child[0]) != 1
+                or self.get_node_by_id(i).get_children_id_mult(child[0]) != 1
             ):
                 return False
         for o in outputs:
-            parent = self.get_node_by_id(i).get_parent_ids
+            parent = self.get_node_by_id(o).get_parent_ids
             if (
                 not (o in nodes_id)
                 or self.get_node_by_id(o).get_children_ids != []
                 or len(parent) != 1
                 or self.get_node_by_id(o).get_parent_id_mult(parent[0]) != 1
             ):
+                return False
+
+        for id in nodes_id:
+            if(id != self.get_node_by_id(id).get_id):
                 return False
         return True
 
