@@ -78,6 +78,49 @@ class NodeTest(unittest.TestCase):
         self.assertIsNot(nc.parents, self.n0.parents)
         self.assertIsNot(nc.children, self.n0.children)
 
+    def test_remove_parent_once(self):
+        self.n0.remove_parent_once(1)
+        self.assertEqual(self.n0.get_parent_id_mult(1), 0)
+        self.assertFalse(1 in self.n0.parents)
+
+        self.n0.add_parent_id(2, 2)
+        self.n0.remove_parent_once(2)
+        self.assertEqual(self.n0.get_parent_id_mult(2), 1)
+
+        self.n0.remove_parent_once(1)
+        self.assertEqual(self.n0.get_parent_id_mult(1), 0)
+        self.assertFalse(1 in self.n0.parents)
+
+    def test_remove_child_once(self):
+        self.n0.remove_child_once(1)
+        self.assertEqual(self.n0.get_children_id_mult(1), 1)
+
+        self.n0.remove_child_once(1)
+        self.assertEqual(self.n0.get_children_id_mult(1), 0)
+        self.assertFalse(1 in self.n0.children)
+
+        self.n0.remove_child_once(1)
+        self.assertEqual(self.n0.get_children_id_mult(1), 0)
+        self.assertFalse(1 in self.n0.children)
+
+    def test_remove_parent_id(self):
+        self.n0.remove_parent_id(1)
+        self.assertEqual(self.n0.get_parent_id_mult(1), 0)
+        self.assertFalse(1 in self.n0.parents)
+
+        self.n0.remove_parent_id(1)
+        self.assertEqual(self.n0.get_parent_id_mult(1), 0)
+        self.assertFalse(1 in self.n0.parents)
+
+    def test_remove_children_id(self):
+        self.n0.remove_children_id(1)
+        self.assertEqual(self.n0.get_children_id_mult(1), 0)
+        self.assertFalse(1 in self.n0.children)
+
+        self.n0.remove_children_id(3)
+        self.assertEqual(self.n0.get_children_id_mult(3), 0)
+        self.assertFalse(3 in self.n0.children)
+
 
 class DigraphTest(unittest.TestCase):
     def setUp(self):
@@ -170,6 +213,38 @@ class DigraphTest(unittest.TestCase):
         self.assertEqual(node_create.get_parent_id_mult(0), 2)
         self.assertEqual(self.G.get_node_by_id(0).get_children_id_mult(id), 2)
         self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(id), 1)
+
+    def test_remove_edge(self):
+        self.G.remove_edge(1, 2)
+        self.assertEqual(self.G.get_node_by_id(1)
+                         .get_children_id_mult(2), 1)
+        self.assertEqual(self.G.get_node_by_id(2)
+                         .get_parent_id_mult(1), 1)
+
+        self.G.remove_edge(1, 2)
+        self.assertEqual(self.G.get_node_by_id(1)
+                         .get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2)
+                         .get_parent_id_mult(1), 0)
+
+        self.G.remove_edge(1, 2)
+        self.assertEqual(self.G.get_node_by_id(1)
+                         .get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2)
+                         .get_parent_id_mult(1), 0)
+
+    def test_remove_parallel_edges(self):
+        self.G.remove_parallel_edge(1, 2)
+        self.assertEqual(self.G.get_node_by_id(1)
+                         .get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2)
+                         .get_parent_id_mult(1), 0)
+
+        self.G.remove_parallel_edge(1, 2)
+        self.assertEqual(self.G.get_node_by_id(1)
+                         .get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2)
+                         .get_parent_id_mult(1), 0)
 
 
 if __name__ == "__main__":  # the following code is called only when

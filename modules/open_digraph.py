@@ -1,3 +1,5 @@
+from audioop import mul
+from traceback import print_tb
 from numpy import ma
 import igraph as ig
 
@@ -95,7 +97,30 @@ class Node:
         self.parents[id] = value
 
     def copy(self):
-        return Node(self.id, str(self.label), self.parents.copy(), self.children.copy())
+        return Node(self.id, str(self.label),
+                    self.parents.copy(), self.children.copy())
+
+    def remove_parent_once(self, id):
+        mult = self.get_parent_id_mult(id)
+        if(mult > 1):
+            self.add_parent_id(id, mult - 1)
+        elif(mult == 1):
+            del self.parents[id]
+
+    def remove_child_once(self, id):
+        mult = self.get_children_id_mult(id)
+        if(mult > 1):
+            self.add_child_id(id, mult - 1)
+        elif(mult == 1):
+            del self.children[id]
+
+    def remove_parent_id(self, id):
+        if(id in self.parents):
+            del self.parents[id]
+
+    def remove_children_id(self, id):
+        if(id in self.children):
+            del self.children[id]
 
 
 class open_digraph:  # for open directed graph
@@ -138,7 +163,7 @@ class open_digraph:  # for open directed graph
         return self.nodes
 
     @property
-    def get_nodes(self):
+    def get_nodes(self) -> Node:
         tab = []
         for k in self.nodes.values():
             tab.append(k)
@@ -151,7 +176,7 @@ class open_digraph:  # for open directed graph
             tab.append(k)
         return tab
 
-    def get_node_by_id(self, k: int):
+    def get_node_by_id(self, k: int) -> Node:
         return self.nodes[k]
 
     def get_nodes_by_ids(self, liste: list):
@@ -207,6 +232,36 @@ class open_digraph:  # for open directed graph
         for child_id in children:
             self.add_edge(id, child_id)
 
+    def remove_edge(self, src, tgt):
+        self.get_node_by_id(src).remove_child_once(tgt)
+        self.get_node_by_id(tgt).remove_parent_once(src)
+
+    def remove_parallel_edge(self, src, tgt):
+        self.get_node_by_id(src).remove_children_id(tgt)
+        self.get_node_by_id(tgt).remove_parent_id(src)
+
+    def remove_node_by_id(self, id):
+        node = self.get_node_by_id(id)
+        for child in node.get_children_ids:
+            self.remove_parallel_edge(id, child)
+
+        for parent in node.get_parent_ids:
+            self.remove_parallel_edge(parent, id)
+
+        self.nodes.pop(id)
+
+    def is_well_formed(self):
+        inputs = self.get_input_ids
+        outputs = self.get_output_ids
+        nodes_id = self.get_node_ids
+        for i in inputs:
+            if not (i in nodes_id):
+                return False
+        for o in outputs:
+            if not (o in nodes_id):
+                return False
+        
+
     def dessine(self, name="mygraph"):
 
         nodes = self.get_nodes
@@ -215,8 +270,10 @@ class open_digraph:  # for open directed graph
         g = ig.Graph(directed=True)
         g.add_vertices(len(nodes))
         ids = self.get_node_ids
+        id_tab = dict()
 
         for i in range(len(ids)):
+            id_tab[ids[i]] = i
             g.vs[i]["id"] = ids[i]
             g.vs[i]["label"] = nodes[i].label
             if ids[i] in ipt:
@@ -229,6 +286,6 @@ class open_digraph:  # for open directed graph
         for node in nodes:
             for idc in node.get_children_ids:
                 for i in range(node.get_children_id_mult(idc)):
-                    g.add_edge(node.get_id, idc)
+                    g.add_edge(id_tab[node.get_id], id_tab[idc])
 
         g.write(name + ".dot")
