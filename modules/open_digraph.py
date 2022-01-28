@@ -1,3 +1,4 @@
+from audioop import mul
 import string
 import igraph as ig
 
@@ -251,36 +252,45 @@ class open_digraph:  # for open directed graph
             self.add_edge(id, child_id)
         return id
 
-    def remove_edge(self, *args: list[(int, int)]) -> None:
+    def remove_edge(self, src: int, tgt: int) -> None:
+        self.get_node_by_id(src).remove_child_once(tgt)
+        self.get_node_by_id(tgt).remove_parent_once(src)
+
+    def remove_edges(self, *args: list[(int, int)]) -> None:
         for arg in args:
             src, tgt = arg
-            self.get_node_by_id(src).remove_child_once(tgt)
-            self.get_node_by_id(tgt).remove_parent_once(src)
+            self.remove_edge(src, tgt)
 
-    def remove_parallel_edge(self, *args: list[(int, int)]) -> None:
+    def remove_parallel_edge(self, src: int, tgt: int) -> None:
+        self.get_node_by_id(src).remove_children_id(tgt)
+        self.get_node_by_id(tgt).remove_parent_id(src)
+
+    def remove_parallel_edges(self, *args: list[(int, int)]) -> None:
         for arg in args:
             src, tgt = arg
-            self.get_node_by_id(src).remove_children_id(tgt)
-            self.get_node_by_id(tgt).remove_parent_id(src)
+            self.remove_parallel_edge(src, tgt)
 
-    def remove_node_by_id(self, *args: list[(int, int)]) -> None:
+    def remove_node_by_id(self, id: int) -> None:
+        node = self.get_node_by_id(id)
+        for child in node.get_children_ids:
+            self.remove_parallel_edge(id, child)
+
+        for parent in node.get_parent_ids:
+            self.remove_parallel_edge(parent, id)
+        if id in self.get_input_ids:
+            inputs = self.get_input_ids
+            inputs.remove(id)
+            self.set_input_ids(inputs)
+
+        if id in self.get_output_ids:
+            outputs = self.get_output_ids
+            outputs.remove(id)
+            self.set_output_ids(outputs)
+        self.nodes.pop(id)
+
+    def remove_nodes_by_id(self, *args: list[(int, int)]) -> None:
         for id in args:
-            node = self.get_node_by_id(id)
-            for child in node.get_children_ids:
-                self.remove_parallel_edge((id, child))
-
-            for parent in node.get_parent_ids:
-                self.remove_parallel_edge((parent, id))
-            if id in self.get_input_ids:
-                inputs = self.get_input_ids
-                inputs.remove(id)
-                self.set_input_ids(inputs)
-
-            if id in self.get_output_ids:
-                outputs = self.get_output_ids
-                outputs.remove(id)
-                self.set_output_ids(outputs)
-            self.nodes.pop(id)
+            self.remove_node_by_id(id)
 
     def is_well_formed(self) -> bool:
         inputs = self.get_input_ids
@@ -296,6 +306,7 @@ class open_digraph:  # for open directed graph
                 or self.get_node_by_id(i).get_children_id_mult(child[0]) != 1
             ):
                 return False
+
         for o in outputs:
             if not (o in nodes_id):
                 return False
@@ -310,6 +321,18 @@ class open_digraph:  # for open directed graph
         for id in nodes_id:
             if id != self.get_node_by_id(id).get_id:
                 return False
+
+        for node in self.get_nodes:
+            for child in node.get_children_ids:
+                mult = node.get_children_id_mult(child)
+                if(self.get_node_by_id(child)
+                   .get_parent_id_mult(node.get_id) != mult):
+                    return False
+            for parent in node.get_parent_ids:
+                mult = node.get_parent_id_mult(parent)
+                if(self.get_node_by_id(parent)
+                   .get_children_id_mult(node.get_id) != mult):
+                    return False
         return True
 
     def add_input_node(self, id: int) -> None:

@@ -24,7 +24,7 @@ if __name__ == '__main__':  # the following code is called only when
     # print(G.is_well_formed())
     # G.remove_node_by_id(5)
     #G.remove_parallel_edge((0,1),(1,2))
-    G.remove_node_by_id(3,6)
+    G.remove_nodes_by_id(3,6)
     G.add_input_node(0)
     G.add_output_node(7)
     #G.add_output_node(9)
