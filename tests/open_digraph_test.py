@@ -213,6 +213,7 @@ class DigraphTest(unittest.TestCase):
         self.assertEqual(node_create.get_parent_id_mult(0), 2)
         self.assertEqual(self.G.get_node_by_id(0).get_children_id_mult(id), 2)
         self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(id), 1)
+        self.assertTrue(self.G.is_well_formed())
 
     def test_remove_edge(self):
         self.G.remove_edge(1, 2)
@@ -235,19 +236,24 @@ class DigraphTest(unittest.TestCase):
 
     def test_remove_parallel_edges(self):
         self.G.remove_parallel_edge(1, 2)
+        self.assertTrue(self.G.is_well_formed())
         self.assertEqual(self.G.get_node_by_id(1)
                          .get_children_id_mult(2), 0)
         self.assertEqual(self.G.get_node_by_id(2)
                          .get_parent_id_mult(1), 0)
 
         self.G.remove_parallel_edge(1, 2)
+        self.assertTrue(self.G.is_well_formed())
         self.assertEqual(self.G.get_node_by_id(1)
                          .get_children_id_mult(2), 0)
         self.assertEqual(self.G.get_node_by_id(2)
                          .get_parent_id_mult(1), 0)
 
     def test_remove_node_by_id(self):
-        self.G.remove_nodes_by_id(1, 2)
+        self.G.remove_node_by_id(1)
+        self.assertTrue(self.G.is_well_formed)
+        self.G.remove_node_by_id(2)
+        self.assertTrue(self.G.is_well_formed)
         n = self.G.get_node_by_id(1)
         self.assertEqual(self.G.get_node_by_id(2), None)
         self.assertEqual(n, None)
@@ -258,11 +264,46 @@ class DigraphTest(unittest.TestCase):
             self.assertEqual(node.get_children_id_mult(2), 0)
             self.assertEqual(node.get_parent_id_mult(2), 0)
 
+    def test_add_input_node(self):
+        id = self.G.new_id()
+        self.G.add_node(label="t")
+        self.G.add_edge(id, 0)
+        self.G.add_input_node(id)
+        self.assertTrue(self.G.is_well_formed())
+
+    def test_add_output_node(self):
+        id = self.G.new_id()
+        self.G.add_node(label="t")
+        self.G.add_edge(7, id)
+        self.G.add_output_node(id)
+        self.assertTrue(self.G.is_well_formed())
+
     def test_is_well_formed(self):
         self.assertTrue(self.G.is_well_formed())
         self.G.remove_node_by_id(1)
         self.assertTrue(self.G.is_well_formed())
+        n0 = Node(0, 'a', {3: 1, 4: 1}, {1: 1, 2: 1})
+        n1 = Node(1, 'b', {0: 1}, {2: 2, 5: 1})
+        n2 = Node(2, 'c', {0: 1, 1: 2}, {6: 1})
+        n3 = Node(7, 'd', {0: 2}, {})
+        n4 = Node(7, 'd', {0: 1, 2: 1}, {})
+        n5 = Node(7, 'd', {}, {0: 2})
+        n6 = Node(7, 'd', {}, {0: 1, 1: 1})
 
+        i0 = Node(3, 'i0', {}, {0: 1})
+        i1 = Node(4, 'i1', {}, {0: 1})
+
+        o0 = Node(5, 'o0', {1: 1}, {})
+        o1 = Node(6, 'o1', {2: 1}, {})
+
+        Gt = open_digraph([3, 4, 7], [5, 6], [n0, n1, n2, n3, i0, i1, o0, o1])
+        self.assertFalse(Gt.is_well_formed())
+        Gt = open_digraph([3, 4, 7], [5, 6], [n0, n1, n2, n4, i0, i1, o0, o1])
+        self.assertFalse(Gt.is_well_formed())
+        Gt = open_digraph([3, 4], [5, 6, 7], [n0, n1, n2, n5, i0, i1, o0, o1])
+        self.assertFalse(Gt.is_well_formed())
+        Gt = open_digraph([3, 4], [5, 6, 7], [n0, n1, n2, n6, i0, i1, o0, o1])
+        self.assertFalse(Gt.is_well_formed())
 
 
 if __name__ == "__main__":  # the following code is called only when

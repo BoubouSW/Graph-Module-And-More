@@ -276,15 +276,13 @@ class open_digraph:  # for open directed graph
         for child in node.get_children_ids:
             self.remove_parallel_edge(id, child)
             n: Node = self.get_node_by_id(child)
-            if(n.get_children_ids == [] and
-                    n.get_parent_ids == []):
+            if(n.get_id in self.get_output_ids):
                 self.remove_node_by_id(child)
 
         for parent in node.get_parent_ids:
             self.remove_parallel_edge(parent, id)
             n: Node = self.get_node_by_id(parent)
-            if(n.get_children_ids == [] and
-                    n.get_parent_ids == []):
+            if(n.get_id in self.get_input_ids):
                 self.remove_node_by_id(parent)
 
         if id in self.get_input_ids:
