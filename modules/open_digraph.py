@@ -277,6 +277,7 @@ class open_digraph:  # for open directed graph
 
         for parent in node.get_parent_ids:
             self.remove_parallel_edge(parent, id)
+            
         if id in self.get_input_ids:
             inputs = self.get_input_ids
             inputs.remove(id)
