@@ -260,6 +260,9 @@ class DigraphTest(unittest.TestCase):
 
     def test_is_well_formed(self):
         self.assertTrue(self.G.is_well_formed())
+        self.G.remove_node_by_id(1)
+        self.assertTrue(self.G.is_well_formed())
+
 
 
 if __name__ == "__main__":  # the following code is called only when
