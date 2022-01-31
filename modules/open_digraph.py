@@ -360,9 +360,15 @@ class open_digraph:  # for open directed graph
         self.set_output_ids(output)
 
     def dessine(self, name: str = "mygraph") -> None:
-        nodes = self.get_nodes
-        ipt = self.get_input_ids
-        opt = self.get_output_ids
+        """
+        Il y a besoin de la librarie "igraph"
+        La fonction génère un fichier .dot qu'on peut ensuite
+        visualiser à l'aide de divers outils
+        (en l'occurence on utilise l'extension "Graphviz" sur vscode)
+        """
+        nodes = self.get_nodes                        
+        ipt = self.get_input_ids                      
+        opt = self.get_output_ids                      
         g = ig.Graph(directed=True)
         g.add_vertices(len(nodes))
         ids = self.get_node_ids
