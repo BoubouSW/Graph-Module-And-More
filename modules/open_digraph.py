@@ -1,4 +1,7 @@
+from random import randint
 import igraph as ig
+from urllib3 import Retry
+import modules.matrice as mat
 
 
 class Node:
@@ -239,6 +242,16 @@ class open_digraph:  # for open directed graph
             self.nodes[tgt].add_parent_id(src, src_children_mult + 1)
             self.nodes[src].add_child_id(tgt, tgt_parent_mult + 1)
 
+    def add_mult_edge(self, src: int, tgt: int, mult: int) -> None:
+        id = self.nodes.keys()
+        if not (src in id and tgt in id):
+            raise (Exception())
+        else:
+            src_children_mult = self.nodes[src].get_children_id_mult(tgt)
+            tgt_parent_mult = self.nodes[tgt].get_parent_id_mult(src)
+            self.nodes[tgt].add_parent_id(src, src_children_mult + mult)
+            self.nodes[src].add_child_id(tgt, tgt_parent_mult + mult)
+
     def add_node(self, label: str = "",
                  parents: list[int] = [],
                  children: list[int] = []) -> None:
@@ -357,6 +370,74 @@ class open_digraph:  # for open directed graph
         output.append(new_id)
         self.set_output_ids(output)
 
+    @classmethod
+    def graph_from_adjacency_matrix(cls, matrix: list[list[int]]):
+        """
+        defined graph with matrix
+        """
+        G = cls.empty()
+        for i in range(len(matrix)):
+            G.add_node("n" + str(i + 1))
+            G.add_mult_edge(i + 1, i + 1, matrix[i][i])
+            for j in range(i):
+                G.add_mult_edge(i + 1, j + 1, matrix[i][j])
+                G.add_mult_edge(j + 1, i + 1, matrix[j][i])
+        return G
+
+    @classmethod
+    def random(cls, n: int, bound: int,
+               inputs: int = 0, outputs: int = 0, form: str = "free"):
+        """
+        Doc
+        Bien pr ́eciser ici les options possibles pour form !
+        """
+        if form == "free":
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_int_matrix(n, bound, False))
+        elif form == "DAG":
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_triangular_int_matrix(n, bound, True))
+        elif form == "oriented":
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_oriented_int_matrix(n, bound, False))
+        elif form == "loop-free":
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_int_matrix(n, bound, True))
+        elif form == "undirected":
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_triangular_int_matrix(n, bound, False))
+        elif form == "loop-free undirected":
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_triangular_int_matrix(n, bound, True))
+
+        nodes = G.get_node_ids
+        for _ in range(inputs):
+            G.add_input_node(nodes[randint(0, len(nodes) - 1)])
+        for _ in range(outputs):
+            G.add_output_node(nodes[randint(0, len(nodes) - 1)])
+
+        return G
+
+    def dict_id_node(self) -> dict[int: int]:
+        d = dict()
+        id = 0
+        for key in self.get_node_ids:
+            if(not(key in self.outputs or key in self.inputs)):
+                d[key] = id
+                id += 1
+        return d
+
+    def adjacency_matrix(self):
+        d = self.dict_id_node()
+        mat = []
+        for id in d.keys():
+            node = self.get_node_by_id(id)
+            l_node = []
+            for id_child in d.values():
+                l_node.append(node.get_children_id_mult(id_child))
+            mat.append(l_node)
+        return mat
+
     def dessine(self, name: str = "mygraph") -> None:
         """
         Il y a besoin de la librarie "igraph"
@@ -364,9 +445,9 @@ class open_digraph:  # for open directed graph
         visualiser à l'aide de divers outils
         (en l'occurence on utilise l'extension "Graphviz" sur vscode)
         """
-        nodes = self.get_nodes                        
-        ipt = self.get_input_ids                      
-        opt = self.get_output_ids                      
+        nodes = self.get_nodes
+        ipt = self.get_input_ids
+        opt = self.get_output_ids
         g = ig.Graph(directed=True)
         g.add_vertices(len(nodes))
         ids = self.get_node_ids
