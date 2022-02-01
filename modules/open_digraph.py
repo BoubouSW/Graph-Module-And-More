@@ -88,6 +88,9 @@ class Node:
         self.parents[id] = value
 
     def remove_parent_once(self, id: int) -> None:
+        """
+        remove one edge with a parent (with his id)
+        """
         mult = self.get_parent_id_mult(id)
         if mult > 1:
             self.add_parent_id(id, mult - 1)
@@ -95,6 +98,9 @@ class Node:
             del self.parents[id]
 
     def remove_child_once(self, id: int) -> None:
+        """
+        remove one edge with a child (with his id)
+        """
         mult = self.get_children_id_mult(id)
         if mult > 1:
             self.add_child_id(id, mult - 1)
@@ -102,10 +108,16 @@ class Node:
             del self.children[id]
 
     def remove_parent_id(self, id: int) -> None:
+        """
+        remove all edges with a parent (with his id)
+        """
         if id in self.parents:
             del self.parents[id]
 
     def remove_children_id(self, id: int) -> None:
+        """
+        remove all edges with a child (with his id)
+        """
         if id in self.children:
             del self.children[id]
 
@@ -115,7 +127,7 @@ class Node:
 
     def copy(self):
         """
-        Create a copy of a node
+        create a copy of the node
         """
         return Node(self.id, str(self.label), self.parents.copy(), self.children.copy())
 
@@ -230,6 +242,9 @@ class open_digraph:  # for open directed graph
         self.outputs.append(id)
 
     def add_edge(self, src: int, tgt: int) -> None:
+        """
+        add an edge between 2 nodes (source -> target)
+        """
         id = self.nodes.keys()
         if not (src in id and tgt in id):
             raise (Exception())
@@ -240,6 +255,9 @@ class open_digraph:  # for open directed graph
             self.nodes[src].add_child_id(tgt, tgt_parent_mult + 1)
 
     def add_mult_edge(self, src: int, tgt: int, mult: int) -> None:
+        """
+        add {mult} edges between 2 nodes (source -> target)
+        """
         id = self.nodes.keys()
         if not (src in id and tgt in id):
             raise (Exception())
@@ -252,6 +270,9 @@ class open_digraph:  # for open directed graph
     def add_node(
         self, label: str = "", parents: list[int] = [], children: list[int] = []
     ) -> None:
+        """
+        add a node to the graph linked to parents and children (list of id)
+        """
         id = self.new_id()
         self.nodes[id] = Node(id, label, {}, {})
         for parent_id in parents:
@@ -261,24 +282,40 @@ class open_digraph:  # for open directed graph
         return id
 
     def remove_edge(self, src: int, tgt: int) -> None:
+        """
+        remove an edge between 2 nodes (source -> target)
+        """
         self.get_node_by_id(src).remove_child_once(tgt)
         self.get_node_by_id(tgt).remove_parent_once(src)
 
     def remove_edges(self, *args: list[(int, int)]) -> None:
+        """
+        remove edges between a list of 2 nodes ([src,tgt],[src,tgt],...)
+        """
         for arg in args:
             src, tgt = arg
             self.remove_edge(src, tgt)
 
     def remove_parallel_edge(self, src: int, tgt: int) -> None:
+        """
+        remove all edges between 2 nodes (source -> target)
+        """
         self.get_node_by_id(src).remove_children_id(tgt)
         self.get_node_by_id(tgt).remove_parent_id(src)
 
     def remove_parallel_edges(self, *args: list[(int, int)]) -> None:
+        """
+        remove all edges between a list of 2 nodes ([src,tgt],[src,tgt],...)
+        """
         for arg in args:
             src, tgt = arg
             self.remove_parallel_edge(src, tgt)
 
     def remove_node_by_id(self, id: int) -> None:
+        """
+        remove a node of the graph by his id
+        delete input/output if this node is linked to one
+        """
         node = self.get_node_by_id(id)
 
         for child in node.get_children_ids:
@@ -304,11 +341,17 @@ class open_digraph:  # for open directed graph
             self.set_output_ids(outputs)
         self.nodes.pop(id)
 
-    def remove_nodes_by_id(self, *args: list[(int, int)]) -> None:
+    def remove_nodes_by_id(self, *args: int) -> None:
+        """
+        remove a list of nodes of the graph by their id (id1, id2,...)
+        """
         for id in args:
             self.remove_node_by_id(id)
 
     def add_input_node(self, id: int) -> None:
+        """
+        add an input node linked to a node (with his id)
+        """
         if id in self.get_input_ids:
             raise (Exception("can't add input on input"))
         new_id = self.add_node(label="i", children=[id])
@@ -317,6 +360,9 @@ class open_digraph:  # for open directed graph
         self.set_input_ids(inputs)
 
     def add_output_node(self, id: int) -> None:
+        """
+        add an output node linked to a node (with his id)
+        """
         if id in self.get_output_ids:
             raise (Exception("can't add output on output"))
         new_id = self.add_node(label="o", parents=[id])
@@ -330,6 +376,9 @@ class open_digraph:  # for open directed graph
 
     @classmethod
     def empty(cls):
+        """
+        create an empty graph
+        """
         return cls([], [], [])
 
     @classmethod
@@ -351,8 +400,14 @@ class open_digraph:  # for open directed graph
         cls, n: int, bound: int, inputs: int = 0, outputs: int = 0, form: str = "free"
     ):
         """
-        Doc
-        Bien préciser ici les options possibles pour form !
+        create a random graph with n nodes with inputs and outputs that you want
+        you can choose an form of graph :
+        - free
+        - DAG
+        - oriented
+        - loop-free
+        - undirected
+        - loop-free undirected
         """
         if form == "free":
             G = cls.graph_from_adjacency_matrix(mat.random_int_matrix(n, bound, False))
@@ -388,12 +443,18 @@ class open_digraph:  # for open directed graph
     ###############
 
     def copy(self):
+        """
+        create a copy of the graph
+        """
         i = self.inputs.copy()
         o = self.outputs.copy()
         l_n = [node for node in self.nodes.values()]
         return open_digraph(i, o, l_n)
 
     def new_id(self) -> int:
+        """
+        create a new id not used in the graph
+        """
         max = 0
         for key in self.nodes.keys():
             if key > max:
@@ -401,6 +462,9 @@ class open_digraph:  # for open directed graph
         return max + 1
 
     def dict_id_node(self) -> dict[int:int]:
+        """
+        create a dict with node id and a unique int (id(key):int(value))
+        """
         d = dict()
         id = 0
         for key in self.get_node_ids:
@@ -410,6 +474,10 @@ class open_digraph:  # for open directed graph
         return d
 
     def adjacency_matrix(self):
+        """
+        create adjacency matrix of the graph
+        (doesn't work yet)
+        """
         d = self.dict_id_node()
         mat = []
         for id in d.keys():
@@ -425,6 +493,9 @@ class open_digraph:  # for open directed graph
     ################
 
     def is_well_formed(self) -> bool:
+        """
+        check if the graph is well formed
+        """
         inputs = self.get_input_ids
         outputs = self.get_output_ids
         nodes_id = self.get_node_ids
