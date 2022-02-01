@@ -1,11 +1,8 @@
 from random import randrange
 
+from matplotlib.image import NonUniformImage
+
 
 def random_int_list(n, bound):
-    tab = []
-    for i in range(n):
-        tab.append(randrange(0, bound))
-    return tab
+    return [randrange(0, bound) for _ in range(n)]
 
-
-print(random_int_list(5, 10))
