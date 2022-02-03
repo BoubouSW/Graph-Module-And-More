@@ -16,7 +16,7 @@ if __name__ == '__main__':  # the following code is called only when
     G.add_node("d", [2], [])
     G.add_edge(0, 1)
     G.add_edge(7, 2)
-
+    
     # print(G.is_well_formed())
     # G.remove_node_by_id(1)
     # print(G.is_well_formed())
@@ -27,16 +27,20 @@ if __name__ == '__main__':  # the following code is called only when
     # G.add_output_node(7)
     # G.add_output_node(9)
     # print(G.is_well_formed())
-    G.dessine()
+    #G.dessine()
 
-    #m = [[0, 1, 1, 0, 0],
-    #     [0, 0, 0, 1, 2],
-    #     [0, 0, 0, 2, 0],
-    #     [1, 0, 0, 0, 1],
-    #     [0, 0, 0, 0, 0]]
-    #Gt: open_digraph = open_digraph.graph_from_adjacency_matrix(m)
-    #Gt.dessine()
-    #print(Gt.adjacency_matrix())
+    m = [[0, 1, 1, 0, 0],
+         [0, 0, 0, 1, 2],
+         [0, 0, 0, 2, 0],
+         [1, 0, 0, 0, 1],
+         [0, 0, 0, 0, 0]]
+    
+    Gt: open_digraph = open_digraph.graph_from_adjacency_matrix(m)
+    Gt.add_input_node(5)
+    Gt.dessine()
+    
+    print(G.adjacency_matrix())
+    print(Gt.adjacency_matrix())
 
     #G2: open_digraph = open_digraph.random(
     #    5, 1, 2, 2, form="DAG")

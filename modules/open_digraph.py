@@ -1,4 +1,5 @@
 from random import randint
+import numpy as np
 import igraph as ig
 import modules.matrice as mat
 
@@ -479,13 +480,15 @@ class open_digraph:  # for open directed graph
         (doesn't work yet)
         """
         d = self.dict_id_node()
-        mat = []
-        for id in d.keys():
-            node = self.get_node_by_id(id)
-            l_node = []
-            for id_child in d.values():
-                l_node.append(node.get_children_id_mult(id_child))
-            mat.append(l_node)
+        nodes = self.get_nodes
+        rm = self.get_input_ids + self.get_output_ids
+        mat = np.zeros((len(nodes) - len(rm), len(nodes) - len(rm)), dtype=int)
+        for node in nodes:
+            if not node.get_id in rm:
+                children = node.get_children_ids
+                for id in children:
+                    if not id in rm:
+                        mat[d[node.get_id], d[id]] = node.get_children_id_mult(id)
         return mat
 
     ################
