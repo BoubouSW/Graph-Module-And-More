@@ -4,8 +4,7 @@ import unittest
 import sys
 import os
 
-root = os.path.normpath(os.path.join(__file__, "./../.."))
-sys.path.append(root)  # allows us
+from modules.matrice import random_int_matrix
 
 
 class InitTest(unittest.TestCase):
@@ -305,6 +304,10 @@ class DigraphTest(unittest.TestCase):
         Gt = open_digraph([3, 4], [5, 6, 7], [n0, n1, n2, n6, i0, i1, o0, o1])
         self.assertFalse(Gt.is_well_formed())
 
-
-if __name__ == "__main__":  # the following code is called only when
-    unittest.main()  # precisely this file is run0, node)
+    def test_matrix(self):
+        m = random_int_matrix(5, 5)
+        G = open_digraph.graph_from_adjacency_matrix(m)
+        adj_m = G.adjacency_matrix()
+        for y in range(5):
+            for x in range(5):
+                self.assertEqual(m[y][x], adj_m[y][x])

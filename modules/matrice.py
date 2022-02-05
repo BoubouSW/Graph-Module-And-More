@@ -1,11 +1,12 @@
-from random import randrange, randint
+from random import randint
+import numpy as np
 
 
 def random_int_list(n: int, bound: int) -> list[int]:
     """
     return a random n list with int in [0, bound] 
     """
-    return [randrange(0, bound + 1) for _ in range(n)]
+    return np.random.randint(bound + 1, size=(n))
 
 
 def random_int_matrix(n: int, bound: int,
@@ -13,11 +14,10 @@ def random_int_matrix(n: int, bound: int,
     """
     return a random n * n matrix with int in [0, bound] 
     """
-    tab = [random_int_list(n, bound) for _ in range(n)]
+    a = np.random.randint(bound + 1, size=(n, n))
     if(null_diag):
-        for x in range(n):
-            tab[x][x] = 0
-    return tab
+        np.fill_diagonal(a, 0)
+    return a
 
 
 def random_symetric_int_matrix(n: int, bound: int,
@@ -25,11 +25,8 @@ def random_symetric_int_matrix(n: int, bound: int,
     """
     return a random n * n symetric matrix with int in [0, bound] 
     """
-    tab = random_int_matrix(n, bound, null_diag)
-    for y in range(n):
-        for x in range(y):
-            tab[y][x] = tab[x][y]
-    return tab
+    m = random_int_matrix(n, bound, null_diag)
+    return (m * m.T) // 2
 
 
 def random_oriented_int_matrix(n, bound, null_diag=True):

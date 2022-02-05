@@ -474,7 +474,7 @@ class open_digraph:  # for open directed graph
                 id += 1
         return d
 
-    def adjacency_matrix(self):
+    def adjacency_matrix(self) -> list[list[int]]:
         """
         create adjacency matrix of the graph
         (doesn't work yet)
