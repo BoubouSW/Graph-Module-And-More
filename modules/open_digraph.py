@@ -647,7 +647,7 @@ class open_digraph:  # for open directed graph
         g.write(path + ".dot")
 
     def display(self, name: str = "mygraph"):
-        self.dessine(name)
+        self.save_as_dot_file(name)
         os.system(f"dot -Tpdf {name}.dot -o {name}.pdf")
         #os.system(f"brave {name}.pdf")
         os.remove(f"{name}.dot")
