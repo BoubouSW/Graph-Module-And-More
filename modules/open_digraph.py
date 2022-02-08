@@ -1,4 +1,5 @@
 from random import randint
+from black import out
 import numpy as np
 import igraph as ig
 import os
@@ -351,24 +352,24 @@ class open_digraph:  # for open directed graph
         for id in args:
             self.remove_node_by_id(id)
 
-    def add_input_node(self, id: int) -> None:
+    def add_input_node(self, id: int, label: str = "i") -> None:
         """
         add an input node linked to a node (with his id)
         """
         if id in self.get_input_ids:
             raise (Exception("can't add input on input"))
-        new_id = self.add_node(label="i", children=[id])
+        new_id = self.add_node(label=label, children=[id])
         inputs = self.get_input_ids
         inputs.append(new_id)
         self.set_input_ids(inputs)
 
-    def add_output_node(self, id: int) -> None:
+    def add_output_node(self, id: int, label: str = "o") -> None:
         """
         add an output node linked to a node (with his id)
         """
         if id in self.get_output_ids:
             raise (Exception("can't add output on output"))
-        new_id = self.add_node(label="o", parents=[id])
+        new_id = self.add_node(label=label, parents=[id])
         output = self.get_output_ids
         output.append(new_id)
         self.set_output_ids(output)
@@ -413,7 +414,8 @@ class open_digraph:  # for open directed graph
         - loop-free undirected
         """
         if form == "free":
-            G = cls.graph_from_adjacency_matrix(mat.random_int_matrix(n, bound, False))
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_int_matrix(n, bound, False))
         elif form == "DAG":
             G = cls.graph_from_adjacency_matrix(
                 mat.random_triangular_int_matrix(n, bound, True)
@@ -423,7 +425,8 @@ class open_digraph:  # for open directed graph
                 mat.random_oriented_int_matrix(n, bound, False)
             )
         elif form == "loop-free":
-            G = cls.graph_from_adjacency_matrix(mat.random_int_matrix(n, bound, True))
+            G = cls.graph_from_adjacency_matrix(
+                mat.random_int_matrix(n, bound, True))
         elif form == "undirected":
             G = cls.graph_from_adjacency_matrix(
                 mat.random_triangular_int_matrix(n, bound, False)
@@ -439,6 +442,52 @@ class open_digraph:  # for open directed graph
         for _ in range(outputs):
             G.add_output_node(nodes[randint(0, len(nodes) - 1)])
 
+        return G
+
+    @classmethod
+    def from_dot_file(cls, path: str):
+        G = cls.empty()
+        with open(path) as dot:
+            while not "digraph" in dot.readline():
+                pass
+            line = dot.readline()
+
+            input = dict()
+            output = dict()
+            node = dict()
+            while "\n" != line:
+                id_d = int(line.split(" ")[2])
+                line = dot.readline()
+                id = int(line.split("=")[1])
+                line = dot.readline()
+                label = line.split("=")[1]
+                line = dot.readline()
+                if("red" in line):
+                    input[id_d] = [id, label]
+                elif ("green" in line):
+                    output[id_d] = [id, label]
+                else:
+                    node[id_d] = G.new_id()
+                    G.add_node(label=label.replace("\n", ""))
+
+                line = dot.readline()
+                line = dot.readline()
+
+            line = dot.readline()
+            while "}\n" != line:
+                line_split = line.split("->")
+                src = int(line_split[0])
+                tgt = int(line_split[1].replace(";\n", ""))
+
+                if(src in input.keys()):
+                    G.add_input_node(node[tgt], input[src][1].replace("\n", ""))
+                elif(src in output.keys()):
+                    G.add_output_node(node[src], out[tgt][1].replace("\n", ""))
+                else:
+                    G.add_edge(node[src], node[tgt])
+                line = dot.readline()
+
+            G.save_as_dot_file("test")
         return G
 
     ###############
@@ -490,7 +539,8 @@ class open_digraph:  # for open directed graph
                 children = node.get_children_ids
                 for id in children:
                     if not id in rm:
-                        mat[d[node.get_id], d[id]] = node.get_children_id_mult(id)
+                        mat[d[node.get_id], d[id]
+                            ] = node.get_children_id_mult(id)
         return mat
 
     ################
@@ -538,7 +588,8 @@ class open_digraph:  # for open directed graph
             for parent in node.get_parent_ids:
                 mult = node.get_parent_id_mult(parent)
                 if (
-                    self.get_node_by_id(parent).get_children_id_mult(node.get_id)
+                    self.get_node_by_id(
+                        parent).get_children_id_mult(node.get_id)
                     != mult
                 ):
                     return False
@@ -559,7 +610,7 @@ class open_digraph:  # for open directed graph
     def __repr__(self) -> str:
         return str(self)
 
-    def dessine(self, name: str = "mygraph") -> None:
+    def save_as_dot_file(self, path: str = "mygraph", verbose: bool = False) -> None:
         """
         Il y a besoin de la librarie "igraph"
         La fonction génère un fichier .dot qu'on peut ensuite
@@ -578,6 +629,8 @@ class open_digraph:  # for open directed graph
             id_tab[ids[i]] = i
             g.vs[i]["id"] = ids[i]
             g.vs[i]["label"] = nodes[i].label
+            if verbose:
+                g.vs[i]["label"] += "\nid: " + str(ids[i])
             if ids[i] in ipt:
                 g.vs[i]["color"] = "red"
             elif ids[i] in opt:
