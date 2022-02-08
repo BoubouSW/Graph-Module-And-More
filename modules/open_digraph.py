@@ -480,7 +480,8 @@ class open_digraph:  # for open directed graph
                 tgt = int(line_split[1].replace(";\n", ""))
 
                 if(src in input.keys()):
-                    G.add_input_node(node[tgt], input[src][1].replace("\n", ""))
+                    G.add_input_node(node[tgt], input[src]
+                                     [1].replace("\n", ""))
                 elif(src in output.keys()):
                     G.add_output_node(node[src], out[tgt][1].replace("\n", ""))
                 else:
@@ -643,9 +644,9 @@ class open_digraph:  # for open directed graph
                 for i in range(node.get_children_id_mult(idc)):
                     g.add_edge(id_tab[node.get_id], id_tab[idc])
 
-        g.write(name + ".dot")
+        g.write(path + ".dot")
 
-    def display(self, name:str = "mygraph"):
+    def display(self, name: str = "mygraph"):
         self.dessine(name)
         os.system(f"dot -Tpdf {name}.dot -o {name}.pdf")
         #os.system(f"brave {name}.pdf")
