@@ -1,6 +1,8 @@
 from random import randint
 import numpy as np
 import igraph as ig
+import os
+import sys
 import modules.matrice as mat
 
 
@@ -589,3 +591,9 @@ class open_digraph:  # for open directed graph
                     g.add_edge(id_tab[node.get_id], id_tab[idc])
 
         g.write(name + ".dot")
+
+    def display(self, name:str = "mygraph"):
+        self.dessine(name)
+        os.system(f"dot -Tpdf {name}.dot -o {name}.pdf")
+        #os.system(f"brave {name}.pdf")
+        os.remove(f"{name}.dot")
