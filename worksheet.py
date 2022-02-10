@@ -37,13 +37,15 @@ if __name__ == '__main__':  # the following code is called only when
     
     Gt: open_digraph = open_digraph.graph_from_adjacency_matrix(m)
     Gt.add_input_node(5)
-    #Gt.dessine()
+    Gt.save_as_dot_file("test", False)
+    Gt2 = open_digraph.from_dot_file("test")
+    Gt2.save_as_dot_file("test2")
     
     #print(G.adjacency_matrix())
     #print(Gt.adjacency_matrix())
 
     G2: open_digraph = open_digraph.random(
-        10, 1, 2, 2, form="DAG")
+        30, 1, 2, 2, form="DAG")
     
-    #G2.dessine()
-    G2.display("test")
+    #G2.save_as_dot_file()
+    #G2.display()

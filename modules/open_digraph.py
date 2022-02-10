@@ -1,9 +1,7 @@
 from random import randint
-from black import out
 import numpy as np
-import igraph as ig
 import os
-import sys
+import re
 import modules.matrice as mat
 
 
@@ -251,7 +249,7 @@ class open_digraph:  # for open directed graph
         """
         id = self.nodes.keys()
         if not (src in id and tgt in id):
-            raise (Exception())
+            raise (Exception(f"{src} or {tgt} is not in {id}"))
         else:
             src_children_mult = self.nodes[src].get_children_id_mult(tgt)
             tgt_parent_mult = self.nodes[tgt].get_parent_id_mult(src)
@@ -447,48 +445,21 @@ class open_digraph:  # for open directed graph
     @classmethod
     def from_dot_file(cls, path: str):
         G = cls.empty()
-        with open(path) as dot:
-            while not "digraph" in dot.readline():
-                pass
+        with open(f"{path}.dot") as dot:
             line = dot.readline()
-
-            input = dict()
-            output = dict()
-            node = dict()
-            while "\n" != line:
-                id_d = int(line.split(" ")[2])
-                line = dot.readline()
-                id = int(line.split("=")[1])
-                line = dot.readline()
-                label = line.split("=")[1]
-                line = dot.readline()
-                if("red" in line):
-                    input[id_d] = [id, label]
-                elif ("green" in line):
-                    output[id_d] = [id, label]
-                else:
-                    node[id_d] = G.new_id()
-                    G.add_node(label=label.replace("\n", ""))
-
-                line = dot.readline()
-                line = dot.readline()
-
-            line = dot.readline()
-            while "}\n" != line:
-                line_split = line.split("->")
-                src = int(line_split[0])
-                tgt = int(line_split[1].replace(";\n", ""))
-
-                if(src in input.keys()):
-                    G.add_input_node(node[tgt], input[src]
-                                     [1].replace("\n", ""))
-                elif(src in output.keys()):
-                    G.add_output_node(node[src], out[tgt][1].replace("\n", ""))
-                else:
-                    G.add_edge(node[src], node[tgt])
-                line = dot.readline()
-
-            G.save_as_dot_file("test")
+            labels = re.findall(r"label=\"?(\w+)(?:\\n\w+)?\"?", line)
+            for label in labels:
+                G.add_node(label=label)
+            
+            inputs = re.findall(r"id=(\d),label=\w*,color=r", line)
+            for id in inputs:
+                G.add_input_id(int(id))
+            output = re.findall(r"id=(\d),label=\w*,color=g", line)
+            for id in output:
+                G.add_output_id(int(id))
+            nodes = re.findall(r"(?:(\d)->(\d))", line)
+            for src, tgt in nodes:
+                G.add_edge(int(src), int(tgt))
         return G
 
     ###############
@@ -618,33 +589,28 @@ class open_digraph:  # for open directed graph
         visualiser à l'aide de divers outils
         (en l'occurence on utilise l'extension "Graphviz" sur vscode)
         """
-        nodes = self.get_nodes
         ipt = self.get_input_ids
         opt = self.get_output_ids
-        g = ig.Graph(directed=True)
-        g.add_vertices(len(nodes))
-        ids = self.get_node_ids
-        id_tab = dict()
+        with open(f"{path}.dot", "w") as file:
+            file.write("digraph{")
+            for node in self.get_nodes:
+                if verbose:
+                    label = f"\"{node.get_label}\\n{node.get_id}\""
+                else:
+                    label = f"{node.get_label}"
+                if node.get_id in ipt:
+                    color = "red"
+                elif node.get_id in opt:
+                    color = "green"
+                else:
+                    color = "black"
+                file.write(
+                    f"{node.get_id}[id={node.get_id},label={label},color={color}];")
+                for child in node.get_children_ids:
+                    for _ in range(node.get_children_id_mult(child)):
+                        file.write(f"{node.get_id}->{child};")
 
-        for i in range(len(ids)):
-            id_tab[ids[i]] = i
-            g.vs[i]["id"] = ids[i]
-            g.vs[i]["label"] = nodes[i].label
-            if verbose:
-                g.vs[i]["label"] += "\nid: " + str(ids[i])
-            if ids[i] in ipt:
-                g.vs[i]["color"] = "red"
-            elif ids[i] in opt:
-                g.vs[i]["color"] = "green"
-            elif not (ids[i] in ipt and ids[i] in opt):
-                g.vs[i]["color"] = "black"
-
-        for node in nodes:
-            for idc in node.get_children_ids:
-                for i in range(node.get_children_id_mult(idc)):
-                    g.add_edge(id_tab[node.get_id], id_tab[idc])
-
-        g.write(path + ".dot")
+            file.write("}")
 
     def display(self, name: str = "mygraph"):
         self.save_as_dot_file(name)
