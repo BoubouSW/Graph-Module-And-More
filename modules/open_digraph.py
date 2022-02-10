@@ -447,7 +447,7 @@ class open_digraph:  # for open directed graph
         G = cls.empty()
         with open(f"{path}.dot") as dot:
             line = dot.readline()
-            labels = re.findall(r"label=\"?(\w+)(?:\\n\w+)?\"?", line)
+            labels = re.findall(r"label=\"?(\w+)", line)
             for label in labels:
                 G.add_node(label=label)
             
@@ -584,7 +584,6 @@ class open_digraph:  # for open directed graph
 
     def save_as_dot_file(self, path: str = "mygraph", verbose: bool = False) -> None:
         """
-        Il y a besoin de la librarie "igraph"
         La fonction génère un fichier .dot qu'on peut ensuite
         visualiser à l'aide de divers outils
         (en l'occurence on utilise l'extension "Graphviz" sur vscode)
