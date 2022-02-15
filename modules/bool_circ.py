@@ -1,4 +1,3 @@
-from cProfile import label
 from modules.open_digraph import open_digraph
 from modules.node import Node
 

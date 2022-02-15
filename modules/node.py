@@ -1,6 +1,3 @@
-from audioop import mul
-
-
 class Node:
     """
     Node: represents a node in a graph
@@ -64,7 +61,7 @@ class Node:
             return 0
 
     @property
-    def indegree(self)-> int:
+    def indegree(self) -> int:
         """
         return number of output input
         """
@@ -89,7 +86,7 @@ class Node:
         return number of input and output
         """
         return self.indegree + self.outdegree
-    
+
     ##############
     #   SETTERS  #
     ##############
