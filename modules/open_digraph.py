@@ -1,3 +1,4 @@
+from curses.ascii import NUL
 import numpy as np
 import os
 import re
@@ -20,7 +21,7 @@ class open_digraph:  # for open directed graph
         dict with id to nodes
     """
 
-    def __init__(self, inputs: list, outputs: list, nodes: list):
+    def __init__(self, inputs: list[int], outputs: list[int], nodes: list):
         """
         inputs: int list; the ids of the input nodes
         outputs: int list; the ids of the output nodes
@@ -292,10 +293,10 @@ class open_digraph:  # for open directed graph
         G = cls.empty()
         with open(f"{path}.dot") as dot:
             line = dot.readline()
-            labels = re.findall(r"label=\"?(\w+)", line)
+            labels = re.findall(r"label=\"(\w+)", line)
             for label in labels:
                 G.add_node(label=label)
-            
+
             inputs = re.findall(r"id=(\d),label=\w*,color=r", line)
             for id in inputs:
                 G.add_input_id(int(id))
@@ -317,7 +318,7 @@ class open_digraph:  # for open directed graph
         """
         i = self.inputs.copy()
         o = self.outputs.copy()
-        l_n = [node for node in self.nodes.values()]
+        l_n = [node.copy() for node in self.nodes.values()]
         return open_digraph(i, o, l_n)
 
     def new_id(self) -> int:
@@ -412,6 +413,19 @@ class open_digraph:  # for open directed graph
                     return False
         return True
 
+    def is_cyclic(self) -> bool:
+        copy = self.copy()
+        while(len(copy.nodes) != 0):
+            id = None
+            for node in copy.get_nodes:
+                if(node.outdegree == 0):
+                    id = node.get_id
+            if(id == None):
+                return True
+            else:
+                copy.remove_node_by_id(id)
+        return False
+
     ################
     #   AFFICHAGE  #
     ################
@@ -439,7 +453,7 @@ class open_digraph:  # for open directed graph
             file.write("digraph{")
             for node in self.get_nodes:
                 if verbose:
-                    label = f"\"{node.get_label}\\n{node.get_id}\""
+                    label = f"{node.get_label}\\n{node.get_id}"
                 else:
                     label = f"{node.get_label}"
                 if node.get_id in ipt:
@@ -449,7 +463,7 @@ class open_digraph:  # for open directed graph
                 else:
                     color = "black"
                 file.write(
-                    f"{node.get_id}[id={node.get_id},label={label},color={color}];")
+                    f"{node.get_id}[id={node.get_id},label=\"{label}\",color={color}];")
                 for child in node.get_children_ids:
                     for _ in range(node.get_children_id_mult(child)):
                         file.write(f"{node.get_id}->{child};")
