@@ -1,5 +1,5 @@
-from modules.open_digraph import open_digraph
-from modules.node import Node
+from open_digraph import open_digraph
+from node import Node
 
 
 class Bool_circ(open_digraph):

@@ -1,10 +1,9 @@
-from curses.ascii import NUL
 import numpy as np
 import os
 import re
-import modules.matrice as mat
+import matrice as mat
 from random import randint
-from modules.node import Node
+from node import Node
 
 
 class open_digraph:  # for open directed graph
