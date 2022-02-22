@@ -315,6 +315,9 @@ class DigraphTest(unittest.TestCase):
         self.assertTrue(self.G.inputs != Gt.inputs and self.G.outputs != Gt.outputs)
         for i in range(len(idG)):
             self.assertEqual(idG[i], idGt[i] + 10)
+        for 
+
+        
         self.G.shift_indices(-10)
         self.assertTrue(self.G.inputs == Gt.inputs and self.G.outputs == Gt.outputs)
         idG = sorted(self.G.get_node_ids)

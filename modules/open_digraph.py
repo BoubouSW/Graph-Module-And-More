@@ -1,5 +1,3 @@
-from typing_extensions import Self
-from matplotlib.pyplot import pink
 import numpy as np
 import os
 import re
@@ -397,7 +395,7 @@ class open_digraph:  # for open directed graph
             del self.nodes[i]
             self.nodes[i + n] = node
 
-    def iparallel(self, g: Self) -> None:
+    def iparallel(self, g) -> None:
         self.shift_indices(g.max_id())
         for i in g.get_input_ids:
             self.add_input_id(i)
