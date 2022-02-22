@@ -1,6 +1,6 @@
-from modules.node import Node
-from modules.open_digraph import open_digraph
-from modules.bool_circ import Bool_circ
+from .node import Node
+from .open_digraph import open_digraph
+from .bool_circ import Bool_circ
 
 
 if __name__ == '__main__':  # the following code is called only when
@@ -68,3 +68,8 @@ if __name__ == '__main__':  # the following code is called only when
     Gb.min_id()
     Gb.max_id()
 
+    Gb.save_as_dot_file("test1", True)
+    Gb.shift_indices(5)
+    Gb.save_as_dot_file("test2", True)
+    print(Gb)
+    #print(Gb.is_well_formed())

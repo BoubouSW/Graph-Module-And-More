@@ -382,9 +382,19 @@ class open_digraph:  # for open directed graph
         print(maxi)
         return maxi
 
-    def shift_indeices(self, n: int) -> None:
-        for i in self.nodes.keys():
-            pass
+    def shift_indices(self, n: int):
+        self.set_input_ids([i + n for i in self.get_input_ids])
+        self.set_output_ids([i + n for i in self.get_output_ids])
+        for i in sorted(self.get_node_ids, reverse=n>0):
+            node = self.get_node_by_id(i)
+            node.set_id(node.get_id + n)
+            node.set_children_ids(
+                {n + ch : node.get_children_id_mult(ch) for ch in node.children.keys()})
+            node.set_parent_ids(
+                {n + ch : node.get_parent_id_mult(ch) for ch in node.parents.keys()})
+            del self.nodes[i]
+            self.nodes[i + n] = node
+            
 
 
     ################
