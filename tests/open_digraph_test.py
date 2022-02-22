@@ -309,17 +309,30 @@ class DigraphTest(unittest.TestCase):
 
     def test_shift_indices(self):
         Gt = self.G.copy()
-        self.G.shift_indices(10)
+        Gt.shift_indices(10)
         idG = sorted(self.G.get_node_ids)
         idGt = sorted(Gt.get_node_ids)
-        self.assertTrue(self.G.inputs != Gt.inputs and self.G.outputs != Gt.outputs)
+        self.assertTrue(self.G.inputs !=
+                        Gt.inputs and self.G.outputs != Gt.outputs)
         for i in range(len(idG)):
+<<<<<<< HEAD
             self.assertEqual(idG[i], idGt[i] + 10)
         #for 
+=======
+            self.assertEqual(idGt[i], idG[i] + 10)
+        for id in Gt.nodes.keys():
+            nodet = Gt.get_node_by_id(id)
+            node = self.G.get_node_by_id(id - 10)
+            for i in node.get_parent_ids:
+                self.assertEqual(nodet.get_parent_id_mult(i),
+                                 node.get_parent_id_mult(i - 10))
+                self.assertEqual(nodet.get_children_id_mult(i),
+                                 node.get_children_id_mult(i - 10))
+>>>>>>> be36916 (update)
 
-        
-        self.G.shift_indices(-10)
-        self.assertTrue(self.G.inputs == Gt.inputs and self.G.outputs == Gt.outputs)
+        Gt.shift_indices(-10)
+        self.assertTrue(self.G.inputs ==
+                        Gt.inputs and self.G.outputs == Gt.outputs)
         idG = sorted(self.G.get_node_ids)
         idGt = sorted(Gt.get_node_ids)
         for i in range(len(idG)):
