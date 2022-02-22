@@ -359,6 +359,27 @@ class open_digraph:  # for open directed graph
                         mat[d[node.get_id], d[id]
                             ] = node.get_children_id_mult(id)
         return mat
+    
+    def min_id(self):
+        nodes = self.get_node_ids
+        if nodes == []:
+            raise Exception("pas de noeuds")
+        mini = nodes[0]
+        for i in nodes:
+            if i < mini:
+                mini = i
+        return mini
+    
+    def min_id(self):
+        nodes = self.get_node_ids
+        if nodes == []:
+            raise Exception("pas de noeuds")
+        maxi = nodes[0]
+        for i in nodes:
+            if i > maxi:
+                maxi = i
+        return maxi
+
 
     ################
     #   PREDICATS  #
