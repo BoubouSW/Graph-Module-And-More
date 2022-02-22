@@ -368,9 +368,10 @@ class open_digraph:  # for open directed graph
         for i in nodes:
             if i < mini:
                 mini = i
+        print(mini)
         return mini
     
-    def min_id(self) -> int:
+    def max_id(self):
         nodes = self.get_node_ids
         if nodes == []:
             raise Exception("pas de noeuds")
@@ -378,6 +379,7 @@ class open_digraph:  # for open directed graph
         for i in nodes:
             if i > maxi:
                 maxi = i
+        print(maxi)
         return maxi
 
     def shift_indeices(self, n: int) -> None:

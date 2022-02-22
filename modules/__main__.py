@@ -40,9 +40,9 @@ if __name__ == '__main__':  # the following code is called only when
 
     Gt: open_digraph = open_digraph.graph_from_adjacency_matrix(m)
     Gt.add_input_node(5)
-    Gt.save_as_dot_file("test", False)
-    Gt2 = open_digraph.from_dot_file("test")
-    Gt2.save_as_dot_file("test2")
+    #Gt.save_as_dot_file("test", False)
+    #Gt2 = open_digraph.from_dot_file("test")
+    #Gt2.save_as_dot_file("test2")
 
     # print(G.adjacency_matrix())
     # print(Gt.adjacency_matrix())
@@ -53,7 +53,7 @@ if __name__ == '__main__':  # the following code is called only when
     # G2.save_as_dot_file()
     # G2.display()
     G.remove_edge(7, 2)
-    G.save_as_dot_file()
+    #G.save_as_dot_file()
 
     b1 = Node(1, "&", {5: 1, 3: 1}, {2: 1})
     b2 = Node(2, "|", {1: 1, 3: 1}, {6: 1})
@@ -63,5 +63,8 @@ if __name__ == '__main__':  # the following code is called only when
     b6 = Node(6, "o", {2: 1}, {})
 
     Gb = Bool_circ([5], [6], [b1, b2, b3, b4, b5, b6])
-    Gb.save_as_dot_file("test", True)
-    print(Gb.is_well_formed())
+    #Gb.save_as_dot_file("test", True)
+    #print(Gb.is_well_formed())
+    Gb.min_id()
+    Gb.max_id()
+

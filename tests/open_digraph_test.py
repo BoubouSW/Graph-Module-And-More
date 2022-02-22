@@ -310,3 +310,9 @@ class DigraphTest(unittest.TestCase):
         for y in range(5):
             for x in range(5):
                 self.assertEqual(m[y][x], adj_m[y][x])
+    
+    def test_min_id(self):
+        self.assertEqual(self.G.min_id(), 0)
+    
+    def test_max_id(self):
+        self.assertEqual(self.G.max_id(), 6)
