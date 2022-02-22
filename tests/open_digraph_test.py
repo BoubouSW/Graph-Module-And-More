@@ -203,9 +203,9 @@ class DigraphTest(unittest.TestCase):
 
     def test_add_node(self):
         id = self.G.new_id()
-        self.G.add_node(label='d', parents=[0, 0], children=[2])
+        self.G.add_node(label="d", parents=[0, 0], children=[2])
         node_create = self.G.get_node_by_id(id)
-        self.assertEqual(node_create.get_label, 'd')
+        self.assertEqual(node_create.get_label, "d")
         self.assertEqual(node_create.get_id, id)
         self.assertEqual(node_create.get_children_id_mult(2), 1)
         self.assertEqual(node_create.get_parent_id_mult(0), 2)
@@ -215,37 +215,27 @@ class DigraphTest(unittest.TestCase):
 
     def test_remove_edge(self):
         self.G.remove_edge(1, 2)
-        self.assertEqual(self.G.get_node_by_id(1)
-                         .get_children_id_mult(2), 1)
-        self.assertEqual(self.G.get_node_by_id(2)
-                         .get_parent_id_mult(1), 1)
+        self.assertEqual(self.G.get_node_by_id(1).get_children_id_mult(2), 1)
+        self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(1), 1)
 
         self.G.remove_edge(1, 2)
-        self.assertEqual(self.G.get_node_by_id(1)
-                         .get_children_id_mult(2), 0)
-        self.assertEqual(self.G.get_node_by_id(2)
-                         .get_parent_id_mult(1), 0)
+        self.assertEqual(self.G.get_node_by_id(1).get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(1), 0)
 
         self.G.remove_edge(1, 2)
-        self.assertEqual(self.G.get_node_by_id(1)
-                         .get_children_id_mult(2), 0)
-        self.assertEqual(self.G.get_node_by_id(2)
-                         .get_parent_id_mult(1), 0)
+        self.assertEqual(self.G.get_node_by_id(1).get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(1), 0)
 
     def test_remove_parallel_edges(self):
         self.G.remove_parallel_edge(1, 2)
         self.assertTrue(self.G.is_well_formed())
-        self.assertEqual(self.G.get_node_by_id(1)
-                         .get_children_id_mult(2), 0)
-        self.assertEqual(self.G.get_node_by_id(2)
-                         .get_parent_id_mult(1), 0)
+        self.assertEqual(self.G.get_node_by_id(1).get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(1), 0)
 
         self.G.remove_parallel_edge(1, 2)
         self.assertTrue(self.G.is_well_formed())
-        self.assertEqual(self.G.get_node_by_id(1)
-                         .get_children_id_mult(2), 0)
-        self.assertEqual(self.G.get_node_by_id(2)
-                         .get_parent_id_mult(1), 0)
+        self.assertEqual(self.G.get_node_by_id(1).get_children_id_mult(2), 0)
+        self.assertEqual(self.G.get_node_by_id(2).get_parent_id_mult(1), 0)
 
     def test_remove_node_by_id(self):
         self.G.remove_node_by_id(1)
@@ -280,19 +270,19 @@ class DigraphTest(unittest.TestCase):
         self.assertTrue(self.G.is_well_formed())
         self.G.remove_node_by_id(1)
         self.assertTrue(self.G.is_well_formed())
-        n0 = Node(0, 'a', {3: 1, 4: 1}, {1: 1, 2: 1})
-        n1 = Node(1, 'b', {0: 1}, {2: 2, 5: 1})
-        n2 = Node(2, 'c', {0: 1, 1: 2}, {6: 1})
-        n3 = Node(7, 'd', {0: 2}, {})
-        n4 = Node(7, 'd', {0: 1, 2: 1}, {})
-        n5 = Node(7, 'd', {}, {0: 2})
-        n6 = Node(7, 'd', {}, {0: 1, 1: 1})
+        n0 = Node(0, "a", {3: 1, 4: 1}, {1: 1, 2: 1})
+        n1 = Node(1, "b", {0: 1}, {2: 2, 5: 1})
+        n2 = Node(2, "c", {0: 1, 1: 2}, {6: 1})
+        n3 = Node(7, "d", {0: 2}, {})
+        n4 = Node(7, "d", {0: 1, 2: 1}, {})
+        n5 = Node(7, "d", {}, {0: 2})
+        n6 = Node(7, "d", {}, {0: 1, 1: 1})
 
-        i0 = Node(3, 'i0', {}, {0: 1})
-        i1 = Node(4, 'i1', {}, {0: 1})
+        i0 = Node(3, "i0", {}, {0: 1})
+        i1 = Node(4, "i1", {}, {0: 1})
 
-        o0 = Node(5, 'o0', {1: 1}, {})
-        o1 = Node(6, 'o1', {2: 1}, {})
+        o0 = Node(5, "o0", {1: 1}, {})
+        o1 = Node(6, "o1", {2: 1}, {})
 
         Gt = open_digraph([3, 4, 7], [5, 6], [n0, n1, n2, n3, i0, i1, o0, o1])
         self.assertFalse(Gt.is_well_formed())
@@ -310,9 +300,24 @@ class DigraphTest(unittest.TestCase):
         for y in range(5):
             for x in range(5):
                 self.assertEqual(m[y][x], adj_m[y][x])
-    
+
     def test_min_id(self):
         self.assertEqual(self.G.min_id(), 0)
-    
+
     def test_max_id(self):
         self.assertEqual(self.G.max_id(), 6)
+
+    def test_shift_indices(self):
+        Gt = self.G.copy()
+        self.G.shift_indices(10)
+        idG = sorted(self.G.get_node_ids)
+        idGt = sorted(Gt.get_node_ids)
+        self.assertTrue(self.G.inputs != Gt.inputs and self.G.outputs != Gt.outputs)
+        for i in range(len(idG)):
+            self.assertEqual(idG[i], idGt[i] + 10)
+        self.G.shift_indices(-10)
+        self.assertTrue(self.G.inputs == Gt.inputs and self.G.outputs == Gt.outputs)
+        idG = sorted(self.G.get_node_ids)
+        idGt = sorted(Gt.get_node_ids)
+        for i in range(len(idG)):
+            self.assertEqual(idG[i], idGt[i])
