@@ -315,10 +315,6 @@ class DigraphTest(unittest.TestCase):
         self.assertTrue(self.G.inputs !=
                         Gt.inputs and self.G.outputs != Gt.outputs)
         for i in range(len(idG)):
-<<<<<<< HEAD
-            self.assertEqual(idG[i], idGt[i] + 10)
-        #for 
-=======
             self.assertEqual(idGt[i], idG[i] + 10)
         for id in Gt.nodes.keys():
             nodet = Gt.get_node_by_id(id)
@@ -328,7 +324,6 @@ class DigraphTest(unittest.TestCase):
                                  node.get_parent_id_mult(i - 10))
                 self.assertEqual(nodet.get_children_id_mult(i),
                                  node.get_children_id_mult(i - 10))
->>>>>>> be36916 (update)
 
         Gt.shift_indices(-10)
         self.assertTrue(self.G.inputs ==
