@@ -48,7 +48,7 @@ if __name__ == '__main__':  # the following code is called only when
     # print(Gt.adjacency_matrix())
 
     G2: open_digraph = open_digraph.random(
-        30, 1, 2, 2, form="DAG")
+        2, 1, 2, 2, form="DAG")
 
     # G2.save_as_dot_file()
     # G2.display()
@@ -72,4 +72,9 @@ if __name__ == '__main__':  # the following code is called only when
     Gb.shift_indices(5)
     Gb.save_as_dot_file("test2", True)
     print(Gb)
+
+    Gb.iparallel(G2.copy())
+    Gb.save_as_dot_file("test")
+
+
     #print(Gb.is_well_formed())

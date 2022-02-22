@@ -1,3 +1,5 @@
+from typing_extensions import Self
+from matplotlib.pyplot import pink
 import numpy as np
 import os
 import re
@@ -359,7 +361,7 @@ class open_digraph:  # for open directed graph
                         mat[d[node.get_id], d[id]
                             ] = node.get_children_id_mult(id)
         return mat
-    
+
     def min_id(self) -> int:
         nodes = self.get_node_ids
         if nodes == []:
@@ -370,7 +372,7 @@ class open_digraph:  # for open directed graph
                 mini = i
         print(mini)
         return mini
-    
+
     def max_id(self):
         nodes = self.get_node_ids
         if nodes == []:
@@ -385,17 +387,24 @@ class open_digraph:  # for open directed graph
     def shift_indices(self, n: int):
         self.set_input_ids([i + n for i in self.get_input_ids])
         self.set_output_ids([i + n for i in self.get_output_ids])
-        for i in sorted(self.get_node_ids, reverse=n>0):
+        for i in sorted(self.get_node_ids, reverse=n > 0):
             node = self.get_node_by_id(i)
             node.set_id(node.get_id + n)
             node.set_children_ids(
-                {n + ch : node.get_children_id_mult(ch) for ch in node.children.keys()})
+                {n + ch: node.get_children_id_mult(ch) for ch in node.children.keys()})
             node.set_parent_ids(
-                {n + ch : node.get_parent_id_mult(ch) for ch in node.parents.keys()})
+                {n + ch: node.get_parent_id_mult(ch) for ch in node.parents.keys()})
             del self.nodes[i]
             self.nodes[i + n] = node
-            
 
+    def iparallel(self, g: Self) -> None:
+        self.shift_indices(g.max_id())
+        for i in g.get_input_ids:
+            self.add_input_id(i)
+        for o in g.get_output_ids:
+            self.add_output_id(o)
+        for id in g.get_node_ids:
+            self.nodes[id] = g.get_node_by_id(id).copy()
 
     ################
     #   PREDICATS  #
