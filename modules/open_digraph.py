@@ -1,9 +1,9 @@
 import numpy as np
 import os
 import re
-import matrice as mat
+import modules.matrice as mat
 from random import randint
-from node import Node
+from modules import Node
 
 
 class open_digraph:  # for open directed graph

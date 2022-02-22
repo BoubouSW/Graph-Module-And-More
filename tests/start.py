@@ -1,5 +1,3 @@
-from traceback import print_tb
-from modules.open_digraph import *
 import unittest
 import sys
 import os

@@ -1,9 +1,7 @@
-from traceback import print_tb
 from modules.open_digraph import open_digraph
 from modules.node import Node
 import unittest
-import sys
-import os
+
 
 from modules.matrice import random_int_matrix
 

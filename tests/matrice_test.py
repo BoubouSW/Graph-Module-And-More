@@ -1,4 +1,3 @@
-from traceback import print_tb
 from modules.matrice import *
 import unittest
 import sys
