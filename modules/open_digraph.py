@@ -403,10 +403,29 @@ class open_digraph:  # for open directed graph
             self.add_output_id(o)
         for id in g.get_node_ids:
             self.nodes[id] = g.get_node_by_id(id).copy()
-    
+
     def parallel(self, g):
         Gt = self.copy()
         Gt.iparallel(g)
+        return Gt
+
+    def icompose(self, g) -> None:
+        if(len(self.get_output_ids) != len(g.get_input_ids)):
+            raise ValueError
+        else:
+            self.shift_indices(g.max_id())
+            for id in g.get_node_ids:
+                self.nodes[id] = g.get_node_by_id(id).copy()
+            for ouput, input in zip(self.get_output_ids, g.get_input_ids):
+                self.add_edge(self.get_node_by_id(ouput).get_parent_ids[0],
+                              g.get_node_by_id(input).get_children_ids[0])
+                self.remove_node_by_id(ouput)
+                self.remove_node_by_id(input)
+            self.set_output_ids(g.get_output_ids)
+
+    def compose(self, g):
+        Gt = self.copy()
+        Gt.icompose(g)
         return Gt
 
     ################
