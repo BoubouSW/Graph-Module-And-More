@@ -68,13 +68,12 @@ if __name__ == '__main__':  # the following code is called only when
     Gb.min_id()
     Gb.max_id()
 
-    Gb.save_as_dot_file("test1", True)
+    #Gb.save_as_dot_file("test1", True)
     Gb.shift_indices(5)
-    Gb.save_as_dot_file("test2", True)
+    #Gb.save_as_dot_file("test2", True)
     print(Gb)
 
-    Gb.iparallel(G2.copy())
-    Gb.save_as_dot_file("test")
+    #Gb.parallel(G2.copy()).save_as_dot_file("test")
 
 
     #print(Gb.is_well_formed())
