@@ -1,6 +1,6 @@
-from node import Node
-from open_digraph import open_digraph
-from bool_circ import Bool_circ
+from modules.node import Node
+from modules.open_digraph import open_digraph
+from modules.bool_circ import Bool_circ
 
 
 if __name__ == '__main__':  # the following code is called only when

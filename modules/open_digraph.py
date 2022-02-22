@@ -1,9 +1,9 @@
 import numpy as np
 import os
 import re
-import modules.matrice as mat
 from random import randint
-from modules import Node
+import modules.matrice as mat
+from modules.node import Node
 
 
 class open_digraph:  # for open directed graph
@@ -360,7 +360,7 @@ class open_digraph:  # for open directed graph
                             ] = node.get_children_id_mult(id)
         return mat
     
-    def min_id(self):
+    def min_id(self) -> int:
         nodes = self.get_node_ids
         if nodes == []:
             raise Exception("pas de noeuds")
@@ -370,7 +370,7 @@ class open_digraph:  # for open directed graph
                 mini = i
         return mini
     
-    def min_id(self):
+    def min_id(self) -> int:
         nodes = self.get_node_ids
         if nodes == []:
             raise Exception("pas de noeuds")
@@ -379,6 +379,10 @@ class open_digraph:  # for open directed graph
             if i > maxi:
                 maxi = i
         return maxi
+
+    def shift_indeices(self, n: int) -> None:
+        for i in self.nodes.keys():
+            pass
 
 
     ################
