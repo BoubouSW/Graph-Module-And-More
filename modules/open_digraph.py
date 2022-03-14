@@ -398,20 +398,21 @@ class open_digraph:  # for open directed graph
             del self.nodes[i]
             self.nodes[i + n] = node
 
-    def iparallel(self, g) -> None:
+    def iparallel(self, *args) -> None:
         """ add g to self """
-        self.shift_indices(g.max_id())
-        for i in g.get_input_ids:
-            self.add_input_id(i)
-        for o in g.get_output_ids:
-            self.add_output_id(o)
-        for id in g.get_node_ids:
-            self.nodes[id] = g.get_node_by_id(id).copy()
+        for g in args:
+            self.shift_indices(g.max_id())
+            for i in g.get_input_ids:
+                self.add_input_id(i)
+            for o in g.get_output_ids:
+                self.add_output_id(o)
+            for id in g.get_node_ids:
+                self.nodes[id] = g.get_node_by_id(id).copy()
 
-    def parallel(self, g):
+    def parallel(self, *args):
         """ return g add self """
         Gt = self.copy()
-        Gt.iparallel(g)
+        Gt.iparallel(args)
         return Gt
 
     def icompose(self, g) -> None:
@@ -458,7 +459,7 @@ class open_digraph:  # for open directed graph
 
         return (nb_connex, dict_node)
 
-    def connected_graph(self):
+    def split(self):
         """Construct list with connected graph"""
         nb, connected = self.connected_components()
         graphs = [self.empty() for _ in range(nb)]

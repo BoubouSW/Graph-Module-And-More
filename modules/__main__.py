@@ -73,15 +73,16 @@ if __name__ == '__main__':  # the following code is called only when
     #Gb.save_as_dot_file("test2", True)
     #print(Gb)
 
-    #Gb.parallel(G2.copy()).save_as_dot_file("test")
+    #Gb.iparallel(Gb.copy(), Gb.copy())
+
     #Gb.save_as_dot_file("gb")
     #G2.save_as_dot_file("g2")
     #Gb.icompose(G2)
     #Gb.save_as_dot_file("test")
-    Gb.add_node("0")
-    GBT = Gb.connected_graph()
+    #Gb.add_node("0")
+    #GBT = Gb.connected_graph()
 
-    GBT[0].save_as_dot_file("gb0")
-    GBT[1].save_as_dot_file("gb1")
+    #GBT[0].save_as_dot_file("gb0")
+    #GBT[1].save_as_dot_file("gb1")
 
     #print(Gb.is_well_formed())
