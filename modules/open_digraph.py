@@ -2,6 +2,8 @@ import numpy as np
 import os
 import re
 from random import randint
+
+from urllib3 import Retry
 import modules.matrice as mat
 from modules.node import Node
 
@@ -383,6 +385,7 @@ class open_digraph:  # for open directed graph
         return maxi
 
     def shift_indices(self, n: int):
+        """ add n for every id"""
         self.set_input_ids([i + n for i in self.get_input_ids])
         self.set_output_ids([i + n for i in self.get_output_ids])
         for i in sorted(self.get_node_ids, reverse=n > 0):
@@ -396,6 +399,7 @@ class open_digraph:  # for open directed graph
             self.nodes[i + n] = node
 
     def iparallel(self, g) -> None:
+        """ add g to self """
         self.shift_indices(g.max_id())
         for i in g.get_input_ids:
             self.add_input_id(i)
@@ -405,11 +409,13 @@ class open_digraph:  # for open directed graph
             self.nodes[id] = g.get_node_by_id(id).copy()
 
     def parallel(self, g):
+        """ return g add self """
         Gt = self.copy()
         Gt.iparallel(g)
         return Gt
 
     def icompose(self, g) -> None:
+        """do composition with g and self"""
         if(len(self.get_output_ids) != len(g.get_input_ids)):
             raise ValueError
         else:
@@ -427,6 +433,43 @@ class open_digraph:  # for open directed graph
         Gt = self.copy()
         Gt.icompose(g)
         return Gt
+
+    def __connected_components(self, dict_node, nb_connex, id_acc):
+        dict_node[id_acc] = nb_connex
+        node = self.get_node_by_id(id_acc)
+        for id in node.get_children_ids:
+            if(not id in dict_node):
+                self.__connected_components(dict_node, nb_connex, id)
+        for id in node.get_parent_ids:
+            if(not id in dict_node):
+                self.__connected_components(dict_node, nb_connex, id)
+
+    def connected_components(self):
+        """
+        return number of connected graph and associate 
+        id with connected graph
+        """
+        dict_node = dict()
+        nb_connex = 0
+        for node in self.get_node_ids:
+            if(not node in dict_node):
+                self.__connected_components(dict_node, nb_connex, node)
+                nb_connex += 1
+
+        return (nb_connex, dict_node)
+
+    def connected_graph(self):
+        """Construct list with connected graph"""
+        nb, connected = self.connected_components()
+        graphs = [self.empty() for _ in range(nb)]
+        for node in connected:
+            graph = connected[node]
+            graphs[graph].nodes[node] = self.get_node_by_id(node).copy()
+            if node in self.inputs:
+                graphs[graph].add_input_id(node)
+            elif node in self.outputs:
+                graphs[graph].add_output_id(node)
+        return graphs
 
     ################
     #   PREDICATS  #
