@@ -4,7 +4,6 @@ class open_digraph_get_set_mx:
     ##############
     #   GETTERS  #
     ##############
-
     @property
     def get_input_ids(self) -> list[int]:
         return self.inputs
@@ -46,7 +45,6 @@ class open_digraph_get_set_mx:
     ##############
     #   SETTERS  #
     ##############
-
     def set_input_ids(self, value: list[int]) -> None:
         self.inputs = value
 

@@ -1,14 +1,9 @@
 import re
-
 from random import randint
 
 import modules.matrice as mat
 
 class open_digraph_constructeur_mx:
-    ####################
-    #   CONSTRUCTEURS  #
-    ####################
-
     @classmethod
     def empty(cls):
         """

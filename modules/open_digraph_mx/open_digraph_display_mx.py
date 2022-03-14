@@ -1,9 +1,6 @@
 import os
 
 class open_digraph_display_mx:
-    ################
-    #   AFFICHAGE  #
-    ################
     def __str__(self) -> str:
         str_ret = f"I = {self.inputs}\n"
         for node in self.nodes.values():
