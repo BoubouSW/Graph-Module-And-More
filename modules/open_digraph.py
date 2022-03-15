@@ -134,7 +134,6 @@ class open_digraph(
                 d[id] = (dist1[id], dist2[id])
         return d
 
-
     def topo_sort(self):
         graph = self.copy()
         topo = []
@@ -150,3 +149,13 @@ class open_digraph(
                     graph.remove_node_by_id(id, opti=False)
             topo.append(add)
         return topo
+    
+    def depth_node(self,tgt):
+        topo = self.topo_sort()
+        res = 0
+        while tgt not in topo[res]:
+            res += 1
+        return res
+    
+    def depth_graph(self):
+        return len(self.topo_sort())
