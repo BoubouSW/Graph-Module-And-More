@@ -91,7 +91,7 @@ class open_digraph(
                             ] = node.get_children_id_mult(id)
         return mat
 
-    def dijkstra(self, src, direction=None):
+    def dijkstra(self, src, direction=None, tgt=None):
         node = self.get_node_by_id(src)
         Q = [src]
         dist = {src: 0}
@@ -99,16 +99,25 @@ class open_digraph(
         while Q != []:
             u = min(Q, key=lambda id: dist[id])
             Q.remove(u)
-            if direction == None:
-                neighbours = node.get_parent_ids + node.get_children_ids
-            elif direction == 1:
-                neighbours = node.get_children_ids
-            elif direction == -1:
-                neighbours = node.get_parent_ids
+            if u == tgt:
+                return (dist, prev)
+            node_u = self.get_node_by_id(u)
+
+            match direction:
+                case None:
+                    neighbours = node_u.get_parent_ids + node_u.get_children_ids
+                case 1:
+                    neighbours = node_u.get_children_ids
+                case -1:
+                    neighbours = node_u.get_parent_ids
+
             for v in neighbours:
-                if not v in dist:
+                if v not in dist:
                     Q.append(v)
-                if not v in dist or dist[v] > (dist[u] + 1):
+                if v not in dist or dist[v] > (dist[u] + 1):
                     dist[v] = dist[u] + 1
                     prev[v] = u
         return (dist, prev)
+
+    def shortest_path(src, tgt):
+        

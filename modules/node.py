@@ -36,17 +36,11 @@ class Node:
 
     @property
     def get_parent_ids(self) -> list[int]:
-        tab = []
-        for p in self.parents.keys():
-            tab.append(p)
-        return tab
+        return list(self.parents.keys())
 
     @property
     def get_children_ids(self) -> list[int]:
-        tab = []
-        for p in self.children.keys():
-            tab.append(p)
-        return tab
+        return list(self.children.keys())
 
     def get_children_id_mult(self, id: int) -> int:
         if id in self.children:
