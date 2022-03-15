@@ -1,16 +1,22 @@
 import numpy as np
 
 from modules.node import Node
-from modules.open_digraph_mx.open_digraph_compositions_mx import open_digrapg_compositions_mx
+from modules.open_digraph_mx.open_digraph_compositions_mx import (
+    open_digrapg_compositions_mx,
+)
 from modules.open_digraph_mx.open_digraph_get_set_mx import open_digraph_get_set_mx
 from modules.open_digraph_mx.open_digraph_display_mx import open_digraph_display_mx
-from modules.open_digraph_mx.open_digraph_constructeur_mx import open_digraph_constructeur_mx
+from modules.open_digraph_mx.open_digraph_constructeur_mx import (
+    open_digraph_constructeur_mx,
+)
 
 
-class open_digraph(open_digrapg_compositions_mx,
-                   open_digraph_get_set_mx,
-                   open_digraph_display_mx,
-                   open_digraph_constructeur_mx):  # for open directed graph
+class open_digraph(
+    open_digrapg_compositions_mx,
+    open_digraph_get_set_mx,
+    open_digraph_display_mx,
+    open_digraph_constructeur_mx,
+):  # for open directed graph
     """
     data structure for a graph
 
@@ -83,9 +89,24 @@ class open_digraph(open_digrapg_compositions_mx,
                 children = node.get_children_ids
                 for id in children:
                     if not id in rm:
-                        mat[d[node.get_id], d[id]
-                            ] = node.get_children_id_mult(id)
+                        mat[d[node.get_id], d[id]] = node.get_children_id_mult(id)
         return mat
+
+    def dijkstra(self, src, direction=None):
+        Q = [src]
+        dist = {src: 0}
+        prev = {}
+        while Q != []:
+            u = min(Q, key=lambda x: x.get_id)
+            Q.remove(u)
+            neighbours = []
+            for v in neighbours:
+                if not v in dist:
+                    Q.append(v)
+                if not v in dist or dist[v] > (dist[u] + 1):
+                    dist[v] = dist[u] + 1
+                    prev[v] = u
+        return (dist, prev)
 
     ################
     #   PREDICATS  #
@@ -132,8 +153,7 @@ class open_digraph(open_digrapg_compositions_mx,
             for parent in node.get_parent_ids:
                 mult = node.get_parent_id_mult(parent)
                 if (
-                    self.get_node_by_id(
-                        parent).get_children_id_mult(node.get_id)
+                    self.get_node_by_id(parent).get_children_id_mult(node.get_id)
                     != mult
                 ):
                     return False
@@ -141,12 +161,12 @@ class open_digraph(open_digrapg_compositions_mx,
 
     def is_cyclic(self) -> bool:
         copy = self.copy()
-        while(len(copy.nodes) != 0):
+        while len(copy.nodes) != 0:
             id = None
             for node in copy.get_nodes:
-                if(node.outdegree == 0):
+                if node.outdegree == 0:
                     id = node.get_id
-            if(id == None):
+            if id == None:
                 return True
             else:
                 copy.remove_node_by_id(id)

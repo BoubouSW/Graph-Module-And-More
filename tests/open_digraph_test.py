@@ -332,3 +332,8 @@ class DigraphTest(unittest.TestCase):
         idGt = sorted(Gt.get_node_ids)
         for i in range(len(idG)):
             self.assertEqual(idG[i], idGt[i])
+
+    def test_connected_components(self):
+        self.assertEqual(self.G.connected_components(), (1,{0:0,1:0,2:0,3:0,4:0,5:0,6:0}))
+        self.G.add_node("a")
+        self.assertEqual(self.G.connected_components(), (2,{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:1}))
