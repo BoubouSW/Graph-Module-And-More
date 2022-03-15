@@ -103,13 +103,12 @@ class open_digraph(
                 return (dist, prev)
             node_u = self.get_node_by_id(u)
 
-            match direction:
-                case None:
-                    neighbours = node_u.get_parent_ids + node_u.get_children_ids
-                case 1:
-                    neighbours = node_u.get_children_ids
-                case -1:
-                    neighbours = node_u.get_parent_ids
+            if neighbours is None:
+                neighbours = node_u.get_parent_ids + node_u.get_children_ids
+            elif neighbours ==  1:
+                neighbours = node_u.get_children_ids
+            else:
+                neighbours = node_u.get_parent_ids
 
             for v in neighbours:
                 if v not in dist:
@@ -120,4 +119,4 @@ class open_digraph(
         return (dist, prev)
 
     def shortest_path(src, tgt):
-        
+        pass
