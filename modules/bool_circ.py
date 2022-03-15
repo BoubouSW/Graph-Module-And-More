@@ -4,10 +4,8 @@ from modules.node import Node
 
 class Bool_circ(open_digraph):
     """
-    Sal
-
-    defut
-"""
+    Boolean circuit
+    """
 
     def __init__(self, inputs: list[int], outputs: list[int], nodes: list[Node]):
         super().__init__(inputs, outputs, nodes)

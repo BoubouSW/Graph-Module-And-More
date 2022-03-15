@@ -118,5 +118,35 @@ class open_digraph(
                     prev[v] = u
         return (dist, prev)
 
-    def shortest_path(src, tgt):
-        pass
+    def shortest_path(self, src, tgt, direction=None):
+        _, prev = self.dijkstra(src, direction=direction, tgt=tgt)
+        che = [tgt]
+        while che[0] != src:
+            che = [prev[che[0]]] + che
+        return che
+
+    def common_ancestor(self, n1, n2):
+        dist1, _ = self.dijkstra(n1, direction=-1)
+        dist2, _ = self.dijkstra(n2, direction=-1)
+        d = {}
+        for id in dist1:
+            if id in dist2:
+                d[id] = (dist1[id], dist2[id])
+        return d
+
+
+    def topo_sort(self):
+        graph = self.copy()
+        topo = []
+        while len(graph.nodes) != 0:
+            add = []
+            for node in graph.get_nodes:
+                if node.indegree == 0:
+                    add.append(node.id)
+            if add == []:
+                raise Exception("this graph is cyclic")
+            else:
+                for id in add:
+                    graph.remove_node_by_id(id, opti=False)
+            topo.append(add)
+        return topo

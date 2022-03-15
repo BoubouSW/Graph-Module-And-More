@@ -69,6 +69,9 @@ if __name__ == '__main__':  # the following code is called only when
     Gb.max_id()
 
     print(G.dijkstra(3,1, tgt = 2))
+    print(G.shortest_path(3, 2))
+    print(G.common_ancestor(2, 5))
+    print(G.topo_sort())
     G.save_as_dot_file("dot", verbose=True)
 
     #Gb.save_as_dot_file("test1", True)

@@ -1,5 +1,6 @@
 from modules.node import Node
 
+
 class open_digraph_get_set_mx:
     ##############
     #   GETTERS  #
@@ -82,7 +83,7 @@ class open_digraph_get_set_mx:
             self.nodes[src].add_child_id(tgt, tgt_parent_mult + mult)
 
     def add_node(
-        self, label: str = "", parents: dict[int:int] = {}, children: dict[int : int] = {}
+        self, label: str = "", parents: dict[int:int] = {}, children: dict[int: int] = {}
     ) -> None:
         """
         add a node to the graph linked to parents and children (list of id)
@@ -125,7 +126,7 @@ class open_digraph_get_set_mx:
             src, tgt = arg
             self.remove_parallel_edge(src, tgt)
 
-    def remove_node_by_id(self, id: int) -> None:
+    def remove_node_by_id(self, id: int, opti: bool = True) -> None:
         """
         remove a node of the graph by his id
         delete input/output if this node is linked to one
@@ -135,13 +136,13 @@ class open_digraph_get_set_mx:
         for child in node.get_children_ids:
             self.remove_parallel_edge(id, child)
             n: Node = self.get_node_by_id(child)
-            if n.get_id in self.get_output_ids:
+            if n.get_id in self.get_output_ids and opti:
                 self.remove_node_by_id(child)
 
         for parent in node.get_parent_ids:
             self.remove_parallel_edge(parent, id)
             n: Node = self.get_node_by_id(parent)
-            if n.get_id in self.get_input_ids:
+            if n.get_id in self.get_input_ids and opti:
                 self.remove_node_by_id(parent)
 
         if id in self.get_input_ids:
@@ -168,7 +169,7 @@ class open_digraph_get_set_mx:
         """
         if id in self.get_input_ids:
             raise (Exception("can't add input on input"))
-        new_id = self.add_node(label=label, children={id : 1})
+        new_id = self.add_node(label=label, children={id: 1})
         inputs = self.get_input_ids
         inputs.append(new_id)
         self.set_input_ids(inputs)
@@ -179,7 +180,7 @@ class open_digraph_get_set_mx:
         """
         if id in self.get_output_ids:
             raise (Exception("can't add output on output"))
-        new_id = self.add_node(label=label, parents={id : 1})
+        new_id = self.add_node(label=label, parents={id: 1})
         output = self.get_output_ids
         output.append(new_id)
         self.set_output_ids(output)
