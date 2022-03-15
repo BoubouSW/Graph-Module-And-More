@@ -103,9 +103,9 @@ class open_digraph(
                 return (dist, prev)
             node_u = self.get_node_by_id(u)
 
-            if neighbours is None:
+            if direction is None:
                 neighbours = node_u.get_parent_ids + node_u.get_children_ids
-            elif neighbours ==  1:
+            elif direction ==  1:
                 neighbours = node_u.get_children_ids
             else:
                 neighbours = node_u.get_parent_ids
