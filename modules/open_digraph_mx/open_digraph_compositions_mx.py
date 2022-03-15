@@ -7,7 +7,6 @@ class open_digrapg_compositions_mx:
         for i in nodes:
             if i < mini:
                 mini = i
-        print(mini)
         return mini
 
     def max_id(self):
@@ -18,7 +17,6 @@ class open_digrapg_compositions_mx:
         for i in nodes:
             if i > maxi:
                 maxi = i
-        print(maxi)
         return maxi
 
     def shift_indices(self, n: int):

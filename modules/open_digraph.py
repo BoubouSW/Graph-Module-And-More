@@ -99,7 +99,12 @@ class open_digraph(
         while Q != []:
             u = min(Q, key=lambda x: x.get_id)
             Q.remove(u)
-            neighbours = []
+            if direction == None:
+                neighbours = [src.get_parent_ids] + [src.get_children_ids]
+            elif direction == 1:
+                neighbours = [src.get_children_ids]
+            elif direction == -1:
+                neighbours = [src.get_parent_ids]
             for v in neighbours:
                 if not v in dist:
                     Q.append(v)
