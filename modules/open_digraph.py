@@ -92,18 +92,19 @@ class open_digraph(
         return mat
 
     def dijkstra(self, src, direction=None):
+        node = self.get_node_by_id(src)
         Q = [src]
         dist = {src: 0}
         prev = {}
         while Q != []:
-            u = min(Q, key=lambda x: x.get_id)
+            u = min(Q, key=lambda id: dist[id])
             Q.remove(u)
             if direction == None:
-                neighbours = [src.get_parent_ids] + [src.get_children_ids]
+                neighbours = node.get_parent_ids + node.get_children_ids
             elif direction == 1:
-                neighbours = [src.get_children_ids]
+                neighbours = node.get_children_ids
             elif direction == -1:
-                neighbours = [src.get_parent_ids]
+                neighbours = node.get_parent_ids
             for v in neighbours:
                 if not v in dist:
                     Q.append(v)

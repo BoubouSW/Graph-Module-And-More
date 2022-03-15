@@ -68,7 +68,7 @@ if __name__ == '__main__':  # the following code is called only when
     Gb.min_id()
     Gb.max_id()
 
-    print(Gb.dijkstra(b1))
+    print(Gb.dijkstra(1,-1))
 
     #Gb.save_as_dot_file("test1", True)
     #Gb.shift_indices(5)
