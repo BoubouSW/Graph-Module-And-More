@@ -18,23 +18,14 @@ class open_digraph_get_set_mx:
 
     @property
     def get_nodes(self) -> list[Node]:
-        tab = []
-        for k in self.nodes.values():
-            tab.append(k)
-        return tab
+        return list(self.nodes.values())
 
     @property
     def get_node_ids(self) -> list[int]:
-        tab = []
-        for k in self.nodes.keys():
-            tab.append(k)
-        return tab
+        return list(self.nodes.keys())
 
     def get_node_by_id(self, k: int) -> Node:
-        if k in self.nodes:
-            return self.nodes[k]
-        else:
-            return None
+        return self.nodes.get(k, None)
 
     def get_nodes_by_ids(self, liste: list) -> list[Node]:
         tab = []
@@ -70,6 +61,13 @@ class open_digraph_get_set_mx:
             self.nodes[tgt].add_parent_id(src, src_children_mult + 1)
             self.nodes[src].add_child_id(tgt, tgt_parent_mult + 1)
 
+    def add_edges(self, *args) -> None:
+        """
+        add an edge between 2 nodes (source -> target)
+        """
+        for src, tgt in args:
+            self.add_edge(src, tgt)
+
     def add_mult_edge(self, src: int, tgt: int, mult: int) -> None:
         """
         add {mult} edges between 2 nodes (source -> target)
@@ -84,17 +82,17 @@ class open_digraph_get_set_mx:
             self.nodes[src].add_child_id(tgt, tgt_parent_mult + mult)
 
     def add_node(
-        self, label: str = "", parents: list[int] = [], children: list[int] = []
+        self, label: str = "", parents: dict[int:int] = {}, children: dict[int : int] = {}
     ) -> None:
         """
         add a node to the graph linked to parents and children (list of id)
         """
         id = self.new_id()
         self.nodes[id] = Node(id, label, {}, {})
-        for parent_id in parents:
-            self.add_edge(parent_id, id)
-        for child_id in children:
-            self.add_edge(id, child_id)
+        for parent_id in parents.keys():
+            self.add_mult_edge(parent_id, id, parents[parent_id])
+        for child_id in children.keys():
+            self.add_mult_edge(id, child_id, children[child_id])
         return id
 
     def remove_edge(self, src: int, tgt: int) -> None:
@@ -170,7 +168,7 @@ class open_digraph_get_set_mx:
         """
         if id in self.get_input_ids:
             raise (Exception("can't add input on input"))
-        new_id = self.add_node(label=label, children=[id])
+        new_id = self.add_node(label=label, children={id : 1})
         inputs = self.get_input_ids
         inputs.append(new_id)
         self.set_input_ids(inputs)
@@ -181,7 +179,7 @@ class open_digraph_get_set_mx:
         """
         if id in self.get_output_ids:
             raise (Exception("can't add output on output"))
-        new_id = self.add_node(label=label, parents=[id])
+        new_id = self.add_node(label=label, parents={id : 1})
         output = self.get_output_ids
         output.append(new_id)
         self.set_output_ids(output)

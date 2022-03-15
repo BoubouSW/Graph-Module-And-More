@@ -203,7 +203,7 @@ class DigraphTest(unittest.TestCase):
 
     def test_add_node(self):
         id = self.G.new_id()
-        self.G.add_node(label="d", parents=[0, 0], children=[2])
+        self.G.add_node(label="d", parents={0 : 2}, children={2 : 1})
         node_create = self.G.get_node_by_id(id)
         self.assertEqual(node_create.get_label, "d")
         self.assertEqual(node_create.get_id, id)
