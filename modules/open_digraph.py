@@ -158,4 +158,4 @@ class open_digraph(
         return res
     
     def depth_graph(self):
-        return len(self.topo_sort())
+        return len(self.topo_sort()) - 1
