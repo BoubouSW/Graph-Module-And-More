@@ -1,3 +1,5 @@
+from dis import dis
+from math import dist
 import numpy as np
 
 from modules.node import Node
@@ -92,7 +94,6 @@ class open_digraph(
         return mat
 
     def dijkstra(self, src, direction=None, tgt=None):
-        node = self.get_node_by_id(src)
         Q = [src]
         dist = {src: 0}
         prev = {}
@@ -105,7 +106,7 @@ class open_digraph(
 
             if direction is None:
                 neighbours = node_u.get_parent_ids + node_u.get_children_ids
-            elif direction ==  1:
+            elif direction == 1:
                 neighbours = node_u.get_children_ids
             else:
                 neighbours = node_u.get_parent_ids
@@ -124,6 +125,22 @@ class open_digraph(
         while che[0] != src:
             che = [prev[che[0]]] + che
         return che
+
+    def longest_path(self, src, tgt):
+        topo = self.topo_sort()
+        k = next(k for k, l in enumerate([[1, 2], [3, 4]]) if 2 in l) + 1
+
+        dist = {src: 0}
+        prev = {}
+        for k in range(k, len(topo)):
+            for w in topo[k]:
+                for neigbour in self.get_node_by_id(w).get_parent_ids:
+                    if neigbour in dist and dist[neigbour] > dist.get(w, -1):
+                        dist[w] = dist[neigbour] + 1
+                        prev[w] = neigbour
+                if w == tgt:
+                    return (dist, prev)
+        return None
 
     def common_ancestor(self, n1, n2):
         dist1, _ = self.dijkstra(n1, direction=-1)
@@ -149,13 +166,13 @@ class open_digraph(
                     graph.remove_node_by_id(id, opti=False)
             topo.append(add)
         return topo
-    
-    def depth_node(self,tgt):
+
+    def depth_node(self, tgt):
         topo = self.topo_sort()
         res = 0
         while tgt not in topo[res]:
             res += 1
         return res
-    
+
     def depth_graph(self):
         return len(self.topo_sort()) - 1

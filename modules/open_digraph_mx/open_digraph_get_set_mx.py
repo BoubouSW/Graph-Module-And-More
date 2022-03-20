@@ -29,10 +29,7 @@ class open_digraph_get_set_mx:
         return self.nodes.get(k, None)
 
     def get_nodes_by_ids(self, liste: list) -> list[Node]:
-        tab = []
-        for i in liste:
-            tab.append(self.get_node_by_id(i))
-        return tab
+        return [self.get_node_by_id(i) for i in liste]
 
     ##############
     #   SETTERS  #
