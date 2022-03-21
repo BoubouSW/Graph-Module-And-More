@@ -73,7 +73,7 @@ if __name__ == '__main__':  # the following code is called only when
     print(G.common_ancestor(2, 5))
     print(G.topo_sort())
     print(G.longest_path(3, 2))
-    G.save_as_dot_file("dot", verbose=True)
+    G.display("dot")
 
     #Gb.save_as_dot_file("test1", True)
     #Gb.shift_indices(5)

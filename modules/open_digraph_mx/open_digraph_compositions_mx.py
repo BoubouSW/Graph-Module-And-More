@@ -1,4 +1,5 @@
 class open_digrapg_compositions_mx:
+
     def min_id(self) -> int:
         nodes = self.get_node_ids
         if nodes == []:
@@ -20,7 +21,9 @@ class open_digrapg_compositions_mx:
         return maxi
 
     def shift_indices(self, n: int):
-        """ add n for every id"""
+        """ 
+        add n for every id
+        """
         self.set_input_ids([i + n for i in self.get_input_ids])
         self.set_output_ids([i + n for i in self.get_output_ids])
         for i in sorted(self.get_node_ids, reverse=n > 0):
@@ -34,7 +37,9 @@ class open_digrapg_compositions_mx:
             self.nodes[i + n] = node
 
     def iparallel(self, *args) -> None:
-        """ add g to self """
+        """
+        add g to self
+        """
         for g in args:
             self.shift_indices(g.max_id())
             for i in g.get_input_ids:
@@ -45,13 +50,17 @@ class open_digrapg_compositions_mx:
                 self.nodes[id] = g.get_node_by_id(id).copy()
 
     def parallel(self, *args):
-        """ return g add self """
+        """
+        return g add self
+        """
         Gt = self.copy()
         Gt.iparallel(args)
         return Gt
 
     def icompose(self, g) -> None:
-        """do composition with g and self"""
+        """
+        do composition with g and self
+        """
         if(len(self.get_output_ids) != len(g.get_input_ids)):
             raise ValueError
         else:
@@ -95,7 +104,9 @@ class open_digrapg_compositions_mx:
         return (nb_connex, dict_node)
 
     def split(self):
-        """Construct list with connected graph"""
+        """
+        Construct list with connected graph
+        """
         nb, connected = self.connected_components()
         graphs = [self.empty() for _ in range(nb)]
         for node in connected:

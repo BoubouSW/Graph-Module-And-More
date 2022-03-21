@@ -172,6 +172,7 @@ cython_debug/
 
 #PDF
 *.pdf
+sujets
 
 #DOT
 *.dot

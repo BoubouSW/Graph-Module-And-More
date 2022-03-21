@@ -1,6 +1,7 @@
 import os
 
 class open_digraph_display_mx:
+    
     def __str__(self) -> str:
         str_ret = f"I = {self.inputs}\n"
         for node in self.nodes.values():
@@ -14,9 +15,7 @@ class open_digraph_display_mx:
 
     def save_as_dot_file(self, path: str = "mygraph", verbose: bool = False) -> None:
         """
-        La fonction génère un fichier .dot qu'on peut ensuite
-        visualiser à l'aide de divers outils
-        (en l'occurence on utilise l'extension "Graphviz" sur vscode)
+        génère un fichier .dot représentant le graphe
         """
         ipt = self.get_input_ids
         opt = self.get_output_ids
@@ -41,8 +40,12 @@ class open_digraph_display_mx:
 
             file.write("}")
 
-    def display(self, name: str = "mygraph"):
-        self.save_as_dot_file(name)
+    def display(self, name: str = "mygraph", verbose : bool = False):
+        """
+        sauvegarde le .dot en pdf 
+        (possibilité de décommenter ligne pour ouvrir dans le navigateur)
+        """
+        self.save_as_dot_file(name,verbose)
         os.system(f"dot -Tpdf {name}.dot -o {name}.pdf")
         #os.system(f"brave {name}.pdf")
         os.remove(f"{name}.dot")

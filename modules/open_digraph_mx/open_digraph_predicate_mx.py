@@ -47,6 +47,9 @@ class open_digraph_predicate_mx:
         return True
 
     def is_cyclic(self) -> bool:
+        """
+        check if the graph is cyclic or not
+        """
         copy = self.copy()
         while len(copy.nodes) != 0:
             id = None

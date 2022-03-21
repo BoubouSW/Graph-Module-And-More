@@ -72,6 +72,9 @@ class open_digraph_constructeur_mx:
 
     @classmethod
     def from_dot_file(cls, path: str):
+        """
+        create a graph from a dot file
+        """
         G = cls.empty()
         with open(f"{path}.dot") as dot:
             line = dot.readline()
