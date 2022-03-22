@@ -250,3 +250,14 @@ class DigraphTest(unittest.TestCase):
     def test_longest_path(self):
         self.assertEqual(self.G.longest_path(1, 2), [1, 2])
         self.assertEqual(self.G.longest_path(0, 2), [0, 1, 2])
+
+    def test_common_ancestor(self):
+        self.assertEqual(self.G.common_ancestor(0, 1), {
+                         0: (0, 1), 3: (1, 2), 4: (1, 2)})
+        self.assertEqual(self.G.common_ancestor(1, 2), {
+                         1: (0, 1), 0: (1, 1), 3: (2, 2), 4: (2, 2)})
+
+    def test_topo_sort(self):
+        self.assertEqual(self.G.topo_sort(), [[3, 4], [0], [1], [2, 5], [6]])
+        self.G.add_edge(2, 0)
+        self.assertRaises(Exception, self.G.topo_sort) 
