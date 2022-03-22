@@ -82,7 +82,7 @@ class open_digraph_get_set_mx:
 
     def add_node(
         self, label: str = "", parents: dict[int:int] = {}, children: dict[int: int] = {}
-    ) -> None:
+    ) -> int:
         """
         add a node to the graph linked to parents and children (list of id)
         """

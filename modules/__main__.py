@@ -17,7 +17,7 @@ if __name__ == '__main__':  # the following code is called only when
     o1 = Node(6, 'o1', {2: 1}, {})
 
     G = open_digraph([3, 4], [5, 6], [n0, n1, n2, i0, i1, o0, o1])
-    G.add_node("d", {2 : 1}, {})
+    G.add_node("d", {2: 1}, {})
     G.add_edge(0, 1)
     G.add_edge(7, 2)
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':  # the following code is called only when
     Gt.add_input_node(5)
     #Gt.save_as_dot_file("test", False)
     #Gt2 = open_digraph.from_dot_file("test")
-    #Gt2.save_as_dot_file("test2")
+    # Gt2.save_as_dot_file("test2")
 
     # print(G.adjacency_matrix())
     # print(Gt.adjacency_matrix())
@@ -54,7 +54,7 @@ if __name__ == '__main__':  # the following code is called only when
     # G2.save_as_dot_file()
     # G2.display()
     G.remove_edge(7, 2)
-    #G.save_as_dot_file()
+    # G.save_as_dot_file()
 
     b1 = Node(1, "&", {5: 1, 3: 1}, {2: 1})
     b2 = Node(2, "|", {1: 1, 3: 1}, {6: 1})
@@ -65,40 +65,38 @@ if __name__ == '__main__':  # the following code is called only when
 
     Gb = Bool_circ([5], [6], [b1, b2, b3, b4, b5, b6])
     #Gb.save_as_dot_file("test", True)
-    #print(Gb.is_well_formed())
+    # print(Gb.is_well_formed())
     Gb.min_id()
     Gb.max_id()
 
-    print(G.dijkstra(3,1, tgt = 2))
-    print(G.shortest_path(3, 2))
-    print(G.common_ancestor(2, 5))
-    print(G.topo_sort())
-    print(G.longest_path(3, 2))
+    #print(G.dijkstra(3,1, tgt = 2))
+    #print(G.shortest_path(3, 2))
+    #print(G.common_ancestor(2, 5))
+    # print(G.topo_sort())
+    #print(G.longest_path(3, 2))
     G.fusion(3, 4)
     G.save_as_dot_file("dot")
 
-    bool_circ = Bool_circ([], [],[])
+    bool_circ = Bool_circ([], [], [])
 
-    newbool = Bool_circ.parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))")
-    print(newbool.is_well_formed())
-    newbool.save_as_dot_file(verbose=True)
-
+    newbool = Bool_circ.parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))", "((x0)&(~(x1)))|(x2)")
+    newbool.save_as_dot_file()
 
     #Gb.save_as_dot_file("test1", True)
-    #Gb.shift_indices(5)
+    # Gb.shift_indices(5)
     #Gb.save_as_dot_file("test2", True)
-    #print(Gb)
+    # print(Gb)
 
     #Gb.iparallel(Gb.copy(), Gb.copy())
 
-    #Gb.save_as_dot_file("gb")
-    #G2.save_as_dot_file("g2")
-    #Gb.icompose(G2)
-    #Gb.save_as_dot_file("test")
-    #Gb.add_node("0")
+    # Gb.save_as_dot_file("gb")
+    # G2.save_as_dot_file("g2")
+    # Gb.icompose(G2)
+    # Gb.save_as_dot_file("test")
+    # Gb.add_node("0")
     #GBT = Gb.connected_graph()
 
-    #GBT[0].save_as_dot_file("gb0")
-    #GBT[1].save_as_dot_file("gb1")
+    # GBT[0].save_as_dot_file("gb0")
+    # GBT[1].save_as_dot_file("gb1")
 
-    #print(Gb.is_well_formed())
+    # print(Gb.is_well_formed())
