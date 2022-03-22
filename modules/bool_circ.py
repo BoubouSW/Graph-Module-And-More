@@ -34,3 +34,28 @@ class Bool_circ(open_digraph):
                 else:
                     return False
         return True
+
+    @classmethod
+    def parse_parentheses(cls,s):
+        n0 = Node(1,"",{},{0:1})
+        o = Node(0," ",{1:1},{})
+        g = open_digraph([], [0], [n0,o])
+        current_node = n0
+        s2 = ""
+        for char in s:
+            if char == '(':
+                current_node.set_label(current_node.get_label + s2)
+                id = g.add_node('',{},{})
+                g.add_edge(id, current_node.id)
+                current_node = g.get_node_by_id(id)
+                s2 = ""
+            elif char == ')':
+                current_node.set_label(current_node.get_label + s2)
+                current_node = g.get_node_by_id(current_node.get_children_ids[0])
+                s2 = ""
+            else:
+                s2 += char
+        return g
+
+
+

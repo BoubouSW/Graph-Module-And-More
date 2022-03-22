@@ -76,6 +76,12 @@ if __name__ == '__main__':  # the following code is called only when
     G.fusion(3, 4)
     G.save_as_dot_file("dot")
 
+    bool_circ = Bool_circ([], [],[])
+
+    newbool = bool_circ.parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))")
+    newbool.display(verbose=True)
+
+
     #Gb.save_as_dot_file("test1", True)
     #Gb.shift_indices(5)
     #Gb.save_as_dot_file("test2", True)
