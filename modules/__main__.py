@@ -1,3 +1,4 @@
+from xxlimited import new
 from .node import Node
 from .open_digraph import open_digraph
 from .bool_circ import Bool_circ
@@ -78,8 +79,9 @@ if __name__ == '__main__':  # the following code is called only when
 
     bool_circ = Bool_circ([], [],[])
 
-    newbool = bool_circ.parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))")
-    newbool.display(verbose=True)
+    newbool = Bool_circ.parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))")
+    print(newbool.is_well_formed())
+    newbool.save_as_dot_file(verbose=True)
 
 
     #Gb.save_as_dot_file("test1", True)

@@ -7,12 +7,13 @@ class Bool_circ(open_digraph):
     Boolean circuit
     """
 
-    def __init__(self, inputs: list[int], outputs: list[int], nodes: list[Node]):
+    def __init__(self, inputs: list[int], outputs: list[int], nodes: list[Node], passVerif:bool=False):
         super().__init__(inputs, outputs, nodes)
-        if not self.is_well_formed():
+        if not self.is_well_formed() and not passVerif:
             raise Exception("this graph is not a bool circ")
 
     def is_well_formed(self) -> bool:
+        print(self)
         cond = {
             "": lambda out, ind: ind == 1,
             "&": lambda out, ind: out == 1,
@@ -39,7 +40,7 @@ class Bool_circ(open_digraph):
     def parse_parentheses(cls, s):
         n0 = Node(1, "", {}, {0: 1})
         o = Node(0, " ", {1: 1}, {})
-        g = open_digraph([], [0], [n0, o])
+        g = cls([], [0], [n0, o], True)
         current_node = n0
         s2 = ""
         for char in s:
