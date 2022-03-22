@@ -7,6 +7,7 @@ sys.path.append(root)
 
 from tests.open_digraph_test import *
 from tests.matrice_test import *
+from tests.node_test import *
 
 if __name__ == "__main__":
     unittest.main()
