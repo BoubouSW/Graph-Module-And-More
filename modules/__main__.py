@@ -1,4 +1,6 @@
 from xxlimited import new
+
+from black import TRANSFORMED_MAGICS
 from .node import Node
 from .open_digraph import open_digraph
 from .bool_circ import Bool_circ
@@ -79,7 +81,8 @@ if __name__ == '__main__':  # the following code is called only when
 
     bool_circ = Bool_circ([], [], [])
 
-    newbool = Bool_circ.parse_parentheses("((x0)&((x1)&(x2)))|((x1)&(~(x2)))", "((x0)&(~(x1)))|(x2)")
+    newbool = Bool_circ.parse_parentheses(
+        "((x0)&((x1)&(x2)))|((x1)&(~(x2)))", "((x0)&(~(x1)))|(x2)")
     newbool.save_as_dot_file()
 
     #Gb.save_as_dot_file("test1", True)
@@ -87,8 +90,26 @@ if __name__ == '__main__':  # the following code is called only when
     #Gb.save_as_dot_file("test2", True)
     # print(Gb)
 
-    Gb.iparallel(Gb.copy(), Gb.copy())
-    
+    n0 = Node(0, "a", {3: 1, 4: 1}, {1: 1, 2: 1})
+    n1 = Node(1, "b", {0: 1}, {2: 2, 5: 1})
+    n2 = Node(2, "c", {0: 1, 1: 2}, {6: 1})
+
+    i0 = Node(3, "i0", {}, {0: 1})
+    i1 = Node(4, "i1", {}, {0: 1})
+
+    o0 = Node(5, "o0", {1: 1}, {})
+    o1 = Node(6, "o1", {2: 1}, {})
+
+    G = open_digraph(
+        [3, 4],
+        [5, 6],
+        [n0, n1, n2, i0, i1, o0, o1],
+    )
+
+    G.save_as_dot_file("dotB", verbose=True)
+    G.iparallel(G.copy())
+    print(G)
+    G.save_as_dot_file("dot", verbose=True)
 
     # Gb.save_as_dot_file("gb")
     # G2.save_as_dot_file("g2")
