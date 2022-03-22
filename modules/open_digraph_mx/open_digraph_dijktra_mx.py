@@ -107,13 +107,12 @@ class open_digraph_dijktra_mx:
 
     def depth_node(self, tgt):
         """
-
+        return depth of node
         """
-        topo = self.topo_sort()
-        return filter(lambda x: tgt in x, topo)[0]
+        return filter(lambda x: tgt in x, self.topo_sort())[0]
 
     def depth_graph(self):
         """
-
+        return depth of graphe
         """
         return len(self.topo_sort()) - 1
