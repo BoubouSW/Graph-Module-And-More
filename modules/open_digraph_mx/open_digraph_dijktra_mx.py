@@ -1,8 +1,9 @@
 class open_digraph_dijktra_mx:
 
-    def dijkstra(self, src, direction=None, tgt=None):
+    def dijkstra(self, src: int, direction=None, tgt=None):
         """
-        
+        return the path between every None accessible with
+        src
         """
         Q = [src]
         dist = {src: 0}
@@ -29,9 +30,29 @@ class open_digraph_dijktra_mx:
                     prev[v] = u
         return (dist, prev)
 
-    def shortest_path(self, src, tgt, direction=None):
+    def longest_path_dijketra(self, src, tgt):
         """
+        return the longest path between src and tgt when 
+        the gref isn't cyclic
+        """
+        topo = self.topo_sort()
+        k = next(k for k, l in enumerate(topo) if src in l) + 1
 
+        dist = {src: 0}
+        prev = {}
+        for k in range(k, len(topo)):
+            for w in topo[k]:
+                for neigbour in self.get_node_by_id(w).get_parent_ids:
+                    if neigbour in dist and dist[neigbour] >= dist.get(w, -1):
+                        dist[w] = dist[neigbour] + 1
+                        prev[w] = neigbour
+                if w == tgt:
+                    return (dist, prev)
+        return None
+
+    def shortest_path(self, src: int, tgt: int, direction=None) -> list[int]:
+        """
+        return the shortest pas between src and tgt
         """
         _, prev = self.dijkstra(src, direction=direction, tgt=tgt)
         che = [tgt]
@@ -39,28 +60,23 @@ class open_digraph_dijktra_mx:
             che = [prev[che[0]]] + che
         return che
 
-    def longest_path(self, src, tgt):
+    def longest_path(self, src: int, tgt: int, direction=None) -> list[int]:
         """
-
+        return the shortest pas between src and tgt
         """
-        topo = self.topo_sort()
-        k = next(k for k, l in enumerate([[1, 2], [3, 4]]) if 2 in l) + 1
+        path = self.longest_path_dijketra(src, tgt)
+        if(path is None):
+            Exception("tgt is not accecible")
+        _, prev = path
 
-        dist = {src: 0}
-        prev = {}
-        for k in range(k, len(topo)):
-            for w in topo[k]:
-                for neigbour in self.get_node_by_id(w).get_parent_ids:
-                    if neigbour in dist and dist[neigbour] > dist.get(w, -1):
-                        dist[w] = dist[neigbour] + 1
-                        prev[w] = neigbour
-                if w == tgt:
-                    return (dist, prev)
-        return None
+        che = [tgt]
+        while che[0] != src:
+            che = [prev[che[0]]] + che
+        return che
 
     def common_ancestor(self, n1, n2):
         """
-
+        return common ancestore into 2 nodes
         """
         dist1, _ = self.dijkstra(n1, direction=-1)
         dist2, _ = self.dijkstra(n2, direction=-1)
@@ -72,7 +88,7 @@ class open_digraph_dijktra_mx:
 
     def topo_sort(self):
         """
-
+        make a topological sort
         """
         graph = self.copy()
         topo = []
@@ -94,10 +110,7 @@ class open_digraph_dijktra_mx:
 
         """
         topo = self.topo_sort()
-        res = 0
-        while tgt not in topo[res]:
-            res += 1
-        return res
+        return filter(lambda x: tgt in x, topo)[0]
 
     def depth_graph(self):
         """

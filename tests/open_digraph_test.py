@@ -5,6 +5,7 @@ import unittest
 
 from modules.matrice import random_int_matrix
 
+
 class DigraphTest(unittest.TestCase):
     def setUp(self):
         self.n0 = Node(0, "a", {3: 1, 4: 1}, {1: 1, 2: 1})
@@ -88,7 +89,7 @@ class DigraphTest(unittest.TestCase):
 
     def test_add_node(self):
         id = self.G.new_id()
-        self.G.add_node(label="d", parents={0 : 2}, children={2 : 1})
+        self.G.add_node(label="d", parents={0: 2}, children={2: 1})
         node_create = self.G.get_node_by_id(id)
         self.assertEqual(node_create.get_label, "d")
         self.assertEqual(node_create.get_id, id)
@@ -219,12 +220,14 @@ class DigraphTest(unittest.TestCase):
             self.assertEqual(idG[i], idGt[i])
 
     def test_connected_components(self):
-        self.assertEqual(self.G.connected_components(), (1,{0:0,1:0,2:0,3:0,4:0,5:0,6:0}))
+        self.assertEqual(self.G.connected_components(),
+                         (1, {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}))
         self.G.add_node("a")
-        self.assertEqual(self.G.connected_components(), (2,{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:1}))
-    
+        self.assertEqual(self.G.connected_components(),
+                         (2, {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 1}))
+
     def test_iparallel(self):
-        
+
         n0 = Node(0, "a", {3: 1, 4: 1}, {1: 1, 2: 1})
         n1 = Node(1, "b", {0: 1}, {2: 2, 5: 1})
         n2 = Node(2, "c", {0: 1, 1: 2}, {6: 1})
@@ -236,8 +239,20 @@ class DigraphTest(unittest.TestCase):
         Gt = open_digraph([3, 4], [5, 6], [n0, n1, n2, i0, i1, o0, o1])
 
         print(self.G.parallel(Gt))
-    
+
     def test_dijktra(self):
-        self.assertEqual(self.G.dijkstra(0),({0: 0, 3: 1, 4: 1, 1: 1, 2: 1, 5: 2, 6: 2}, {3: 0, 4: 0, 1: 0, 2: 0, 5: 1, 6: 2}))
-        self.assertEqual(self.G.dijkstra(1),({1: 0, 0: 1, 2: 1, 5: 1, 3: 2, 4: 2, 6: 2}, {0: 1, 2: 1, 5: 1, 3: 0, 4: 0, 6: 2}))
-        self.assertEqual(self.G.dijkstra(3),({3: 0, 0: 1, 4: 2, 1: 2, 2: 2, 5: 3, 6: 3}, {0: 3, 4: 0, 1: 0, 2: 0, 5: 1, 6: 2}))
+        self.assertEqual(self.G.dijkstra(0), ({0: 0, 3: 1, 4: 1, 1: 1, 2: 1, 5: 2, 6: 2}, {
+                         3: 0, 4: 0, 1: 0, 2: 0, 5: 1, 6: 2}))
+        self.assertEqual(self.G.dijkstra(1), ({1: 0, 0: 1, 2: 1, 5: 1, 3: 2, 4: 2, 6: 2}, {
+                         0: 1, 2: 1, 5: 1, 3: 0, 4: 0, 6: 2}))
+        self.assertEqual(self.G.dijkstra(3), ({3: 0, 0: 1, 4: 2, 1: 2, 2: 2, 5: 3, 6: 3}, {
+                         0: 3, 4: 0, 1: 0, 2: 0, 5: 1, 6: 2}))
+
+    def test_shortest_path(self):
+        self.assertEqual(self.G.shortest_path(0, 2), [0, 2])
+        self.assertEqual(self.G.shortest_path(1, 5), [1, 5])
+        self.assertEqual(self.G.shortest_path(3, 5), [3, 0, 1, 5])
+
+    def test_longest_path(self):
+        self.assertEqual(self.G.longest_path(1, 2), [1, 2])
+        self.assertEqual(self.G.longest_path(0, 2), [0, 1, 2])
