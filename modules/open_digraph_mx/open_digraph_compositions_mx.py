@@ -40,6 +40,7 @@ class open_digrapg_compositions_mx:
         """
         add g to self
         """
+        print(args)
         for g in args:
             self.shift_indices(g.max_id())
             for i in g.get_input_ids:
@@ -54,7 +55,8 @@ class open_digrapg_compositions_mx:
         return g add self
         """
         Gt = self.copy()
-        Gt.iparallel(args)
+        for arg in args:
+            Gt.iparallel(arg)
         return Gt
 
     def icompose(self, g) -> None:

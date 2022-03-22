@@ -87,7 +87,8 @@ if __name__ == '__main__':  # the following code is called only when
     #Gb.save_as_dot_file("test2", True)
     # print(Gb)
 
-    #Gb.iparallel(Gb.copy(), Gb.copy())
+    Gb.iparallel(Gb.copy(), Gb.copy())
+    
 
     # Gb.save_as_dot_file("gb")
     # G2.save_as_dot_file("g2")
