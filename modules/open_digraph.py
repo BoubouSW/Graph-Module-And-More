@@ -93,3 +93,15 @@ class open_digraph(
                         mat[d[node.get_id], d[id]
                             ] = node.get_children_id_mult(id)
         return mat
+
+    def fusion(self, id1:int, id2:int, labelId1:bool=True, label:str=""):
+        n1 = self.get_node_by_id(id1)
+        if(not labelId1):
+            n1.set_label(label)
+        n2 = self.get_node_by_id(id2)
+        for id in n2.get_children_ids:
+            self.add_mult_edge(id1, id, n2.get_children_id_mult(id))
+        for id in n2.get_children_ids:
+            self.add_mult_edge(id, id1, n2.get_parent_id_mult(id))
+        self.remove_node_by_id(id2)
+        
