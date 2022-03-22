@@ -41,7 +41,6 @@ class open_digrapg_compositions_mx:
         add g to self
         """
         for g in args:
-            print(g.max_id())
             self.shift_indices(g.max_id() + 1)
             for i in g.get_input_ids:
                 self.add_input_id(i)
