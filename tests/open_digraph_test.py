@@ -222,3 +222,22 @@ class DigraphTest(unittest.TestCase):
         self.assertEqual(self.G.connected_components(), (1,{0:0,1:0,2:0,3:0,4:0,5:0,6:0}))
         self.G.add_node("a")
         self.assertEqual(self.G.connected_components(), (2,{0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:1}))
+    
+    def test_iparallel(self):
+        
+        n0 = Node(0, "a", {3: 1, 4: 1}, {1: 1, 2: 1})
+        n1 = Node(1, "b", {0: 1}, {2: 2, 5: 1})
+        n2 = Node(2, "c", {0: 1, 1: 2}, {6: 1})
+        i0 = Node(3, "i0", {}, {0: 1})
+        i1 = Node(4, "i1", {}, {0: 1})
+        o0 = Node(5, "o0", {1: 1}, {})
+        o1 = Node(6, "o1", {2: 1}, {})
+
+        Gt = open_digraph([3, 4], [5, 6], [n0, n1, n2, i0, i1, o0, o1])
+
+        print(self.G.parallel(Gt))
+    
+    def test_dijktra(self):
+        self.assertEqual(self.G.dijkstra(0),({0: 0, 3: 1, 4: 1, 1: 1, 2: 1, 5: 2, 6: 2}, {3: 0, 4: 0, 1: 0, 2: 0, 5: 1, 6: 2}))
+        self.assertEqual(self.G.dijkstra(1),({1: 0, 0: 1, 2: 1, 5: 1, 3: 2, 4: 2, 6: 2}, {0: 1, 2: 1, 5: 1, 3: 0, 4: 0, 6: 2}))
+        self.assertEqual(self.G.dijkstra(3),({3: 0, 0: 1, 4: 2, 1: 2, 2: 2, 5: 3, 6: 3}, {0: 3, 4: 0, 1: 0, 2: 0, 5: 1, 6: 2}))
