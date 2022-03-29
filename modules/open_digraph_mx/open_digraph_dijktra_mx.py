@@ -32,7 +32,7 @@ class open_digraph_dijktra_mx:
 
     def longest_path_dijketra(self, src, tgt):
         """
-        return the longest path between src and tgt when 
+        return the longest path between src and tgt when
         the gref isn't cyclic
         """
         topo = self.topo_sort()
@@ -109,7 +109,8 @@ class open_digraph_dijktra_mx:
         """
         return depth of node
         """
-        return filter(lambda x: tgt in x, self.topo_sort())[0]
+        topo = self.topo_sort()
+        return next(k for k, l in enumerate(topo) if tgt in l)
 
     def depth_graph(self):
         """
