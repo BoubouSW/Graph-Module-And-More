@@ -1,4 +1,7 @@
 from cProfile import label
+import math
+
+from numpy import bitwise_and
 from modules.open_digraph import open_digraph
 from modules.node import Node
 
@@ -79,3 +82,32 @@ class Bool_circ(open_digraph):
                 else:
                     s2 += char
         return g
+
+    @classmethod
+    def from_table(cls, bits: str):
+        nbVar = math.log2(len(bits))
+        if not nbVar.is_integer():
+            raise Exception("this table is not a boolean table")
+        G = cls.empty()
+        idsSplit = []
+        for i in range(int(nbVar)):
+            idSplit = G.add_node("")
+            G.add_input_node(idSplit, label=f"I{i}")
+            idsSplit.append(idSplit)
+
+        outputid = G.add_node("|", {}, {})
+        G.add_output_node(outputid)
+        for line, bit in enumerate(bits):
+            if bit == "1":
+                idAnd = G.add_node("&")
+                G.add_edge(idAnd, outputid)
+                line = bin(line)[2:]
+                line = "0" * (int(nbVar) - len(line)) + line
+                for i, bitEntry in enumerate(line):
+                    if(bitEntry == "1"):
+                        G.add_edge(idsSplit[i], idAnd)
+                    else:
+                        idNon = G.add_node("~")
+                        G.add_edge(idNon, idAnd)
+                        G.add_edge(idsSplit[i], idNon)
+        return G
