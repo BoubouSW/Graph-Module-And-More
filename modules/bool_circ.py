@@ -2,6 +2,7 @@ import math
 
 from modules.open_digraph import open_digraph
 from modules.node import Node
+import modules.utils as ut
 
 
 class Bool_circ(open_digraph):
@@ -109,3 +110,7 @@ class Bool_circ(open_digraph):
                         G.add_edge(idNon, idAnd)
                         G.add_edge(idsSplit[i], idNon)
         return G
+    
+    @classmethod()
+    def from_kmap(cls, bits: str):
+        return cls.parse_parentheses(ut.K_map_prop(bits))
