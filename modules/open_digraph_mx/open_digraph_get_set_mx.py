@@ -73,6 +73,8 @@ class open_digraph_get_set_mx:
         id = self.nodes.keys()
         if not (src in id and tgt in id):
             raise (Exception())
+        elif mult == 0:
+            return
         else:
             src_children_mult = self.nodes[src].get_children_id_mult(tgt)
             tgt_parent_mult = self.nodes[tgt].get_parent_id_mult(src)

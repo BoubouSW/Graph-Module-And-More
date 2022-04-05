@@ -1,5 +1,5 @@
 import math
-
+from random import randint
 from modules.open_digraph import open_digraph
 from modules.node import Node
 import modules.utils as ut
@@ -114,3 +114,33 @@ class Bool_circ(open_digraph):
     @classmethod
     def from_kmap(cls, bits: str):
         return cls.parse_parentheses(ut.K_map_prop(bits))
+
+
+    @classmethod
+    def random_bool_circ(cls, size: int, input: int, output: int):
+        G = cls.random(size,1,form="DAG")
+        nodes = G.get_nodes
+        for node in nodes:
+            if node.get_children_ids == []:
+                G.add_output_node(node.get_id)
+            if node.get_parent_ids == []:
+                G.add_input_node(node.get_id)
+                
+            children = node.get_children_ids
+            parents = node.get_parent_ids
+            if len(parents) == 1 and len(children) == 1:
+                node.set_label("~")
+            elif len(parents) == 1 and len(children) > 1:
+                node.set_label("")
+            elif len(parents) > 1 and len(children) == 1: 
+                tab = ["&","|","^"]
+                node.set_label(tab[randint(0, 2)])
+            else:
+                tab = ["&","|","^"]
+                idg = G.add_node(tab[randint(0, 2)],{},{})
+                node.set_label("")
+                G.add_edge(idg, node.get_id)
+                for ch in parents:
+                    G.add_edge(ch, idg)
+                    G.remove_edge(node.get_id, ch)
+        return G
