@@ -111,6 +111,6 @@ class Bool_circ(open_digraph):
                         G.add_edge(idsSplit[i], idNon)
         return G
     
-    @classmethod()
+    @classmethod
     def from_kmap(cls, bits: str):
         return cls.parse_parentheses(ut.K_map_prop(bits))

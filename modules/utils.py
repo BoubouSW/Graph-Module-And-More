@@ -74,12 +74,12 @@ def trans_box(x: int, y: int, w: int, h: int, gcode_lig, gcode_col) -> String:
         op = ""
         if lig_var[x] == "0":
             op = "~"
-        forme += op + "(x" + str(x) + ")" + "&"
+        forme += "(" + op + "(x" + str(x) + "))" + "&"
     for x in col_var:
         op = ""
         if col_var[x] == "0":
             op = "~"
-        forme += op + "(x" + str(x) + ")" + "&"
+        forme += "(" + op + "(x" + str(x) + "))" + "&"
     forme = forme[:-1] + ")"
     return forme
 
@@ -118,3 +118,4 @@ def K_map_prop(bits: str) -> String:
 
         i -= 1
     return ""
+
