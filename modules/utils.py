@@ -71,15 +71,15 @@ def trans_box(x: int, y: int, w: int, h: int, gcode_lig, gcode_col) -> String:
             if(s in lig_var and lig_var[s] != b):
                 del lig_var[s]
     for x in lig_var:
-        op = ""
         if lig_var[x] == "0":
-            op = "~"
-        forme += "(" + op + "(x" + str(x) + "))" + "&"
+            forme += "(~(x" + str(x) + "))" + "&"
+        else:
+            forme += "(x" + str(x) + ")" + "&"
     for x in col_var:
-        op = ""
         if col_var[x] == "0":
-            op = "~"
-        forme += "(" + op + "(x" + str(x) + "))" + "&"
+            forme += "(~(x" + str(x) + "))" + "&"
+        else:
+            forme += "(x" + str(x) + ")" + "&"
     forme = forme[:-1] + ")"
     return forme
 

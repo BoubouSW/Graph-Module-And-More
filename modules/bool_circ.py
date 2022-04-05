@@ -75,9 +75,15 @@ class Bool_circ(open_digraph):
                             g.add_input_id(current_node.id)
                             inputDiv[current_node.label] = idDiv
                             current_node = g.get_node_by_id(idDiv)
+                        pass
                     current_node = g.get_node_by_id(
                         current_node.get_children_ids[-1])
                     s2 = ""
+                elif char in oper:
+                    if current_node.label == char:
+                        pass
+                    else:
+                        s2 += char
                 else:
                     s2 += char
         return g
@@ -110,15 +116,14 @@ class Bool_circ(open_digraph):
                         G.add_edge(idNon, idAnd)
                         G.add_edge(idsSplit[i], idNon)
         return G
-    
+
     @classmethod
     def from_kmap(cls, bits: str):
         return cls.parse_parentheses(ut.K_map_prop(bits))
 
-
     @classmethod
     def random_bool_circ(cls, size: int, input: int, output: int):
-        G = cls.random(size,1,form="DAG")
+        G = cls.random(size, 1, form="DAG")
         nodes = G.get_nodes
         for node in nodes:
             if node.get_children_ids == []:
@@ -145,15 +150,19 @@ class Bool_circ(open_digraph):
                 node.set_label("~")
             elif len(parents) == 1 and len(children) > 1:
                 node.set_label("")
-            elif len(parents) > 1 and len(children) == 1: 
-                tab = ["&","|","^"]
+            elif len(parents) > 1 and len(children) == 1:
+                tab = ["&", "|", "^"]
                 node.set_label(tab[randint(0, 2)])
             else:
-                tab = ["&","|","^"]
-                idg = G.add_node(tab[randint(0, 2)],{},{})
+                tab = ["&", "|", "^"]
+                idg = G.add_node(tab[randint(0, 2)], {}, {})
                 node.set_label("")
                 G.add_edge(idg, node.get_id)
                 for ch in parents:
                     G.add_edge(ch, idg)
                     G.remove_edge(node.get_id, ch)
         return G
+
+    @classmethod
+    def adder(n: int):
+        pass
