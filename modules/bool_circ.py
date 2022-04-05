@@ -125,7 +125,20 @@ class Bool_circ(open_digraph):
                 G.add_output_node(node.get_id)
             if node.get_parent_ids == []:
                 G.add_input_node(node.get_id)
-                
+        isize = len(G.get_input_ids)
+        osize = len(G.get_output_ids)
+        if isize < input:
+            for i in range(input-isize):
+                G.add_input_node(randint(1,len(nodes)))
+        if isize > input:
+            pass
+        if osize < output:
+            for i in range(output-osize):
+                G.add_output_node(randint(1,len(nodes)))
+        if osize > output:
+            pass
+
+        for node in nodes:
             children = node.get_children_ids
             parents = node.get_parent_ids
             if len(parents) == 1 and len(children) == 1:
