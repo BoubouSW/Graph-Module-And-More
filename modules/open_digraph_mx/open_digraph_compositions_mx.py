@@ -42,10 +42,8 @@ class open_digrapg_compositions_mx:
         """
         for g in args:
             self.shift_indices(g.max_id() + 1)
-            for i in g.get_input_ids:
-                self.add_input_id(i)
-            for o in g.get_output_ids:
-                self.add_output_id(o)
+            self.set_input_ids(self.get_input_ids + g.get_input_ids)
+            self.set_output_ids(g.get_output_ids + self.get_output_ids)
             for id in g.get_node_ids:
                 self.nodes[id] = g.get_node_by_id(id).copy()
 

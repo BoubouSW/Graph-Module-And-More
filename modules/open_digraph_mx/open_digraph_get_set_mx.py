@@ -162,7 +162,7 @@ class open_digraph_get_set_mx:
         for id in args:
             self.remove_node_by_id(id)
 
-    def add_input_node(self, id: int, label: str = "i") -> None:
+    def add_input_node(self, id: int, label: str = "i") -> int:
         """
         add an input node linked to a node (with his id)
         """
@@ -172,8 +172,9 @@ class open_digraph_get_set_mx:
         inputs = self.get_input_ids
         inputs.append(new_id)
         self.set_input_ids(inputs)
+        return new_id
 
-    def add_output_node(self, id: int, label: str = "o") -> None:
+    def add_output_node(self, id: int, label: str = "o") -> int:
         """
         add an output node linked to a node (with his id)
         """
@@ -183,3 +184,4 @@ class open_digraph_get_set_mx:
         output = self.get_output_ids
         output.append(new_id)
         self.set_output_ids(output)
+        return new_id

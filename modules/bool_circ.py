@@ -1,4 +1,5 @@
 import math
+from operator import index, xor
 from random import randint
 from modules.open_digraph import open_digraph
 from modules.node import Node
@@ -134,12 +135,12 @@ class Bool_circ(open_digraph):
         osize = len(G.get_output_ids)
         if isize < input:
             for i in range(input-isize):
-                G.add_input_node(randint(1,len(nodes)))
+                G.add_input_node(randint(1, len(nodes)))
         if isize > input:
             pass
         if osize < output:
             for i in range(output-osize):
-                G.add_output_node(randint(1,len(nodes)))
+                G.add_output_node(randint(1, len(nodes)))
         if osize > output:
             pass
 
@@ -164,5 +165,62 @@ class Bool_circ(open_digraph):
         return G
 
     @classmethod
-    def adder(n: int):
-        pass
+    def adder(cls, n: int):
+        G = cls.empty()
+        ba = G.add_node()
+        bb = G.add_node()
+        bc = G.add_node()
+        G.add_input_node(ba, label="a0")
+        G.add_input_node(bb, label="b0")
+        G.add_input_node(bc, label="c")
+        xor1 = G.add_node("^")
+        xor2 = G.add_node("^")
+        split = G.add_node("")
+        and1 = G.add_node("&")
+        and2 = G.add_node("&")
+        or1 = G.add_node("|")
+        G.add_output_node(xor2, label="r0")
+        G.add_output_node(or1, label="c'")
+
+        G.add_edges((ba, xor1), (ba, and1),
+                    (bb, xor1), (bb, and1),
+                    (bc, xor2), (bc, and2),
+                    (xor1, split), (split, and2), (split, xor2),
+                    (and1, or1), (and2, or1))
+        for i in range(0, n - 1):
+            add = G.copy()
+            ia = len(add.get_input_ids) // 2
+            ib = ia
+            for node in add.get_input_ids:
+                n = add.get_node_by_id(node)
+                if n.get_label[0] == "a":
+                    n.set_label(f"a{ia}")
+                    ia += 1
+                if n.get_label[0] == "b":
+                    n.set_label(f"b{ib}")
+                    ib += 1
+            ir = len(add.get_output_ids) - 1
+            outs = add.get_output_ids[::-1]
+            for node in outs:
+                n = add.get_node_by_id(node)
+                if n.get_label[0] == "r":
+                    n.set_label(f"r{ir}")
+                    ir += 1
+            rin = add.get_input_ids[-1]
+            rin += G.max_id() + 1
+            rout = G.get_output_ids[-1]
+            G.iparallel(add)
+            G.add_edge(G.get_node_by_id(rout).get_parent_ids[0],
+                       G.get_node_by_id(rin).get_children_ids[0])
+            G.remove_nodes_by_id(rin, rout)
+        return G
+
+    @classmethod
+    def half_adder(cls, n: int):
+        G = cls.adder(n)
+        inlst = G.get_input_ids
+        reg = inlst[-1]
+        inlst.pop()
+        G.set_input_ids(inlst)
+        G.get_node_by_id(reg).set_label("0")        
+        return G
