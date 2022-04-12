@@ -213,6 +213,8 @@ class Bool_circ(open_digraph):
             G.add_edge(G.get_node_by_id(rout).get_parent_ids[0],
                        G.get_node_by_id(rin).get_children_ids[0])
             G.remove_nodes_by_id(rin, rout)
+        inputs = G.get_input_ids[:-1]
+        G.set_input_ids(inputs[0::2] + inputs[1::2] + [G.get_input_ids[-1]])
         return G
 
     @classmethod
