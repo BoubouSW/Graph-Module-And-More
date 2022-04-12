@@ -1,8 +1,5 @@
-from distutils.util import change_root
 import math
-from operator import index, xor
 from random import randint
-from types import NoneType
 from modules.open_digraph import open_digraph
 from modules.node import Node
 import modules.utils as ut
