@@ -1,6 +1,8 @@
+from distutils.util import change_root
 import math
 from operator import index, xor
 from random import randint
+from types import NoneType
 from modules.open_digraph import open_digraph
 from modules.node import Node
 import modules.utils as ut
@@ -192,7 +194,7 @@ class Bool_circ(open_digraph):
             ia = len(add.get_input_ids) // 2
             ib = ia
             for node in add.get_input_ids:
-                n = add.get_node_by_id(node)
+                n = G.get_node_by_id(node)
                 if n.get_label[0] == "a":
                     n.set_label(f"a{ia}")
                     ia += 1
@@ -202,7 +204,7 @@ class Bool_circ(open_digraph):
             ir = len(add.get_output_ids) - 1
             outs = add.get_output_ids[::-1]
             for node in outs:
-                n = add.get_node_by_id(node)
+                n = G.get_node_by_id(node)
                 if n.get_label[0] == "r":
                     n.set_label(f"r{ir}")
                     ir += 1
@@ -214,7 +216,9 @@ class Bool_circ(open_digraph):
                        G.get_node_by_id(rin).get_children_ids[0])
             G.remove_nodes_by_id(rin, rout)
         inputs = G.get_input_ids[:-1]
-        G.set_input_ids(inputs[0::2] + inputs[1::2] + [G.get_input_ids[-1]])
+        G.set_input_ids(inputs[0::2] +
+                        inputs[1::2] +
+                        [G.get_input_ids[-1]])
         return G
 
     @classmethod
@@ -229,10 +233,11 @@ class Bool_circ(open_digraph):
 
     @classmethod
     def int_to_bites(cls, i: int, n: int = 8):
-        if math.log2(i) > n:
+        bites = bin(i)[2:]        
+        if len(bites) > n:
             raise ValueError("The number is too big")
         bites = bin(i)[2:]
-        bites = "0" * (int(n - math.log2(i))) + bites
+        bites = "0" * (int(n - len(bites))) + bites
         G = cls.empty()
         for b in bites:
             id = G.add_node(b)
@@ -249,6 +254,8 @@ class Bool_circ(open_digraph):
             raise ValueError(f"Invalid node {copy.get_id}")
         for child in copy.get_children_ids:
             n = self.add_node(node.get_label)
+            if child in self.get_output_ids:
+                self.add_output_node(n, label=self.get_node_by_id(child).get_label)
             self.add_edge(n, child)
         self.remove_nodes_by_id(id, idco)
 
@@ -269,6 +276,9 @@ class Bool_circ(open_digraph):
             n = self.add_node("0")
             childet = et.get_children_ids[0]
             self.add_edge(n, childet)
+            if et.get_children_ids[0] in self.get_output_ids:
+                self.add_output_node(n, label=self.get_node_by_id(
+                    et.get_children_ids[0]).get_label)
             self.remove_nodes_by_id(id, idet)
         if label == "1":
             self.remove_node_by_id(id)
@@ -290,6 +300,9 @@ class Bool_circ(open_digraph):
             n = self.add_node("1")
             childet = ou.get_children_ids[0]
             self.add_edge(n, childet)
+            if ou.get_children_ids[0] in self.get_output_ids:
+                self.add_output_node(n, label=self.get_node_by_id(
+                    ou.get_children_ids[0]).get_label)
             self.remove_nodes_by_id(id, idet)
         if label == "0":
             self.remove_node_by_id(id)
@@ -309,7 +322,8 @@ class Bool_circ(open_digraph):
             n.get_children_ids[0]).get_children_ids[0]
         self.add_edge(id_new, not_next)
         if not_next in self.get_output_ids:
-            self.add_output_node(id_new)
+            self.add_output_node(
+                id_new, label=self.get_node_by_id(not_next).get_label)
         self.remove_nodes_by_id(id, n.get_children_ids[0])
 
     def neutral_gate(self, id: int) -> None:
@@ -326,7 +340,8 @@ class Bool_circ(open_digraph):
         node_next = n.get_children_ids[0]
         self.add_edge(id_new, node_next)
         if node_next in self.get_output_ids:
-            self.add_output_node(id_new)
+            self.add_output_node(
+                id_new, label=self.get_node_by_id(node_next).get_label)
         self.remove_nodes_by_id(id)
 
     def xor_gate(self, id: int) -> None:
@@ -345,11 +360,11 @@ class Bool_circ(open_digraph):
 
         self.remove_nodes_by_id(id)
 
-    def switch_gate(self, id: int) -> None:
+    def __switch_gate(self, id: int) -> None:
         node = self.get_node_by_id(id)
         if node.label == '&' or node.label == '|' or node.label == '^':
             self.neutral_gate(id)
-        else: 
+        else:
             children = node.get_children_ids
             if len(children) != 1:
                 raise ValueError("more than 1 child")
@@ -364,3 +379,19 @@ class Bool_circ(open_digraph):
                 self.not_gate(id)
             elif label == '^':
                 self.xor_gate(id)
+
+    def evaluate(self) -> None:
+        change = True
+        while change:
+            change = False
+            for id in self.get_node_ids:
+                n = self.get_node_by_id(id)
+                self.save_as_dot_file(f"1.dot")
+                if n != None and len(n.get_parent_ids) == 0:
+                    if len(n.get_children_ids) == 0:
+                        self.remove_node_by_id(id)
+                        continue
+                    if ((n.get_label != "0" and n.get_label != "1") or
+                       n.get_children_ids[0] not in self.get_output_ids):
+                        self.__switch_gate(id)
+                        change = True

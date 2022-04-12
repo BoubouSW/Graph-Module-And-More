@@ -66,7 +66,7 @@ class open_digrapg_compositions_mx:
             self.shift_indices(g.max_id())
             for id in g.get_node_ids:
                 self.nodes[id] = g.get_node_by_id(id).copy()
-            for ouput, input in zip(self.get_output_ids, g.get_input_ids):
+            for ouput, input in list(zip(self.get_output_ids, g.get_input_ids)):
                 self.add_edge(self.get_node_by_id(ouput).get_parent_ids[0],
                               g.get_node_by_id(input).get_children_ids[0])
                 self.remove_node_by_id(ouput)
