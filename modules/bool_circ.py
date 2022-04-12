@@ -342,3 +342,23 @@ class Bool_circ(open_digraph):
             raise ValueError(f"Invalid node {id}")
 
         self.remove_nodes_by_id(id)
+
+    def switch_gate(self, id: int) -> None:
+        node = self.get_node_by_id(id)
+        if node.label == '&' or node.label == '|' or node.label == '^':
+            self.neutral_gate(id)
+        else: 
+            children = node.get_children_ids
+            if len(children) != 1:
+                raise ValueError("more than 1 child")
+            label = self.get_node_by_id(children[0]).get_label
+            if label == '':
+                self.copy_gate(id)
+            elif label == '&':
+                self.and_gate(id)
+            elif label == '|':
+                self.or_gate(id)
+            elif label == '~':
+                self.not_gate(id)
+            elif label == '^':
+                self.xor_gate(id)
