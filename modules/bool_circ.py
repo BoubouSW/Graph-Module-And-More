@@ -222,5 +222,17 @@ class Bool_circ(open_digraph):
         reg = inlst[-1]
         inlst.pop()
         G.set_input_ids(inlst)
-        G.get_node_by_id(reg).set_label("0")        
+        G.get_node_by_id(reg).set_label("0")
+        return G
+
+    @classmethod
+    def int_to_bites(cls, i: int, n: int = 8):
+        if math.log2(i) > n:
+            raise ValueError("The number is too big")
+        bites = bin(i)[2:]
+        bites = "0" * (int(n - math.log2(i))) + bites
+        G = cls.empty()
+        for b in bites:
+            id = G.add_node(b)
+            G.add_output_node(id)
         return G
