@@ -237,15 +237,15 @@ class Bool_circ(open_digraph):
             G.add_output_node(id)
         return G
 
-    def copie_gate(self, id: int):
+    def copy_gate(self, id: int):
         node = self.get_node_by_id(id)
         if node.get_label != "1" and node.get_label != "0":
-            raise Exception("pas un bit")
+            raise ValueError(f"Invalid node {id}")
         idco = node.get_children_ids[0]
-        copie = self.get_node_by_id(idco)
-        if copie.get_label != '':
-            raise Exception("pas une copie")
-        for child in copie.get_children_ids:
+        copy = self.get_node_by_id(idco)
+        if copy.get_label != '':
+            raise ValueError(f"Invalid node {copy.get_id}")
+        for child in copy.get_children_ids:
             n = self.add_node(node.get_label)
             self.add_edge(n, child)
         self.remove_nodes_by_id(id, idco)
@@ -254,11 +254,11 @@ class Bool_circ(open_digraph):
         node = self.get_node_by_id(id)
         label = node.get_label
         if label != "1" and label != "0":
-            raise Exception(f"pas un bit {id}")
+            raise ValueError(f"Invalid node {id}")
         idet = node.get_children_ids[0]
         et = self.get_node_by_id(idet)
         if et.get_label != '&':
-            raise Exception("pas porte ET")
+            raise ValueError(f"Invalid node {et.get_id}")
         if label == "0":
             for parent in et.get_parent_ids:
                 if parent != id:
@@ -275,11 +275,11 @@ class Bool_circ(open_digraph):
         node = self.get_node_by_id(id)
         label = node.get_label
         if label != "1" and label != "0":
-            raise Exception("pas un bit")
+            raise ValueError(f"Invalid node {n.get_children_ids[0]}")
         idet = node.get_children_ids[0]
         ou = self.get_node_by_id(idet)
         if ou.get_label != '|':
-            raise Exception("pas porte OU")
+            raise ValueError(f"Invalid node {ou.get_id}")
         if label == "1":
             for parent in ou.get_parent_ids:
                 if parent != id:
