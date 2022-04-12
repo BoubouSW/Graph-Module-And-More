@@ -236,3 +236,58 @@ class Bool_circ(open_digraph):
             id = G.add_node(b)
             G.add_output_node(id)
         return G
+
+    def copie_gate(self,id: int):
+        node = self.get_node_by_id(id)
+        if node.get_label != "1" and node.get_label != "0":
+            raise Exception("pas un bit")
+        idco = node.get_children_ids[0]
+        copie = self.get_node_by_id(idco)
+        if copie.get_label != '':
+            raise Exception("pas une copie")
+        for child in copie.get_children_ids:
+            n = self.add_node(node.get_label)
+            self.add_edge(n, child)
+        self.remove_nodes_by_id(id,idco)
+    
+    def and_gate(self,id : int):
+        node = self.get_node_by_id(id)
+        label = node.get_label
+        if label != "1" and label != "0":
+            raise Exception(f"pas un bit {id}")
+        idet = node.get_children_ids[0]
+        et = self.get_node_by_id(idet)
+        if et.get_label != '&':
+            raise Exception("pas porte ET")
+        if label == "0":
+            for parent in et.get_parent_ids:
+                if parent != id:
+                    n = self.add_node('')
+                    self.add_edge(parent, n)
+            n = self.add_node("0")
+            childet = et.get_children_ids[0]
+            self.add_edge(n,childet)
+            self.remove_nodes_by_id(id,idet)
+        if label == "1":
+            self.remove_node_by_id(id)
+    
+    def or_gate(self,id : int):
+        node = self.get_node_by_id(id)
+        label = node.get_label
+        if label != "1" and label != "0":
+            raise Exception("pas un bit")
+        idet = node.get_children_ids[0]
+        ou = self.get_node_by_id(idet)
+        if ou.get_label != '|':
+            raise Exception("pas porte OU")
+        if label == "1":
+            for parent in ou.get_parent_ids:
+                if parent != id:
+                    n = self.add_node('')
+                    self.add_edge(parent, n)
+            n = self.add_node("1")
+            childet = ou.get_children_ids[0]
+            self.add_edge(n,childet)
+            self.remove_nodes_by_id(id,idet)
+        if label == "0":
+            self.remove_node_by_id(id)
