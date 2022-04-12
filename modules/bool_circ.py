@@ -383,7 +383,6 @@ class Bool_circ(open_digraph):
             change = False
             for id in self.get_node_ids:
                 n = self.get_node_by_id(id)
-                self.save_as_dot_file(f"1.dot")
                 if n != None and len(n.get_parent_ids) == 0:
                     if len(n.get_children_ids) == 0:
                         self.remove_node_by_id(id)
