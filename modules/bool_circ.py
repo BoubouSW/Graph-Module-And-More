@@ -237,7 +237,7 @@ class Bool_circ(open_digraph):
             G.add_output_node(id)
         return G
 
-    def copie_gate(self,id: int):
+    def copie_gate(self, id: int):
         node = self.get_node_by_id(id)
         if node.get_label != "1" and node.get_label != "0":
             raise Exception("pas un bit")
@@ -248,9 +248,9 @@ class Bool_circ(open_digraph):
         for child in copie.get_children_ids:
             n = self.add_node(node.get_label)
             self.add_edge(n, child)
-        self.remove_nodes_by_id(id,idco)
-    
-    def and_gate(self,id : int):
+        self.remove_nodes_by_id(id, idco)
+
+    def and_gate(self, id: int):
         node = self.get_node_by_id(id)
         label = node.get_label
         if label != "1" and label != "0":
@@ -266,12 +266,12 @@ class Bool_circ(open_digraph):
                     self.add_edge(parent, n)
             n = self.add_node("0")
             childet = et.get_children_ids[0]
-            self.add_edge(n,childet)
-            self.remove_nodes_by_id(id,idet)
+            self.add_edge(n, childet)
+            self.remove_nodes_by_id(id, idet)
         if label == "1":
             self.remove_node_by_id(id)
-    
-    def or_gate(self,id : int):
+
+    def or_gate(self, id: int):
         node = self.get_node_by_id(id)
         label = node.get_label
         if label != "1" and label != "0":
@@ -287,7 +287,58 @@ class Bool_circ(open_digraph):
                     self.add_edge(parent, n)
             n = self.add_node("1")
             childet = ou.get_children_ids[0]
-            self.add_edge(n,childet)
-            self.remove_nodes_by_id(id,idet)
+            self.add_edge(n, childet)
+            self.remove_nodes_by_id(id, idet)
         if label == "0":
             self.remove_node_by_id(id)
+
+    def not_gate(self, id) -> None:
+        n = self.get_node_by_id(id)
+        if(self.get_node_by_id(n.get_children_ids[0]).get_label != "~"):
+            raise ValueError(f"Invalid node {n.get_children_ids[0]}")
+        id_new = 0
+        if(n.get_label == "0"):
+            id_new = self.add_node("1")
+        elif(n.get_label == "1"):
+            id_new = self.add_node("0")
+        else:
+            raise ValueError(f"Invalid node {id}")
+        not_next = self.get_node_by_id(
+            n.get_children_ids[0]).get_children_ids[0]
+        self.add_edge(id_new, not_next)
+        if not_next in self.get_output_ids:
+            self.add_output_node(id_new)
+        self.remove_nodes_by_id(id, n.get_children_ids[0])
+
+    def neutral_gate(self, id: int) -> None:
+        n = self.get_node_by_id(id)
+        if len(n.get_parent_ids) > 0:
+            raise ValueError(f"Invalid node {id}")
+        id_new = 0
+        if (n.get_label == "|" or n.get_label == "^"):
+            id_new = self.add_node("0")
+        elif n.get_label == "&":
+            id_new = self.add_node("1")
+        else:
+            raise ValueError(f"Invalid node {id}")
+        node_next = n.get_children_ids[0]
+        self.add_edge(id_new, node_next)
+        if node_next in self.get_output_ids:
+            self.add_output_node(id_new)
+        self.remove_nodes_by_id(id)
+
+    def xor_gate(self, id: int) -> None:
+        n = self.get_node_by_id(id)
+        if self.get_node_by_id(n.get_children_ids[0]).get_label != "^":
+            raise ValueError(f"Invalid node {n.get_children_ids[0]}")
+        if n.get_label == "1":
+            xor = self.get_node_by_id(n.get_children_ids[0])
+            idNot = self.add_node("~")
+            self.add_edges((xor.get_id, idNot),
+                           (idNot, xor.get_children_ids[0]))
+            self.remove_edge(xor.get_id, xor.get_children_ids[0])
+
+        elif n.get_label != "0":
+            raise ValueError(f"Invalid node {id}")
+
+        self.remove_nodes_by_id(id)
