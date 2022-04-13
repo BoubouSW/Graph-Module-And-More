@@ -155,12 +155,12 @@ class open_digraph_get_set_mx:
             self.set_output_ids(outputs)
         self.nodes.pop(id)
 
-    def remove_nodes_by_id(self, *args: int) -> None:
+    def remove_nodes_by_id(self, *args: int, opti :bool=True) -> None:
         """
         remove a list of nodes of the graph by their id (id1, id2,...)
         """
         for id in args:
-            self.remove_node_by_id(id)
+            self.remove_node_by_id(id, opti=opti)
 
     def add_input_node(self, id: int, label: str = "i") -> int:
         """
