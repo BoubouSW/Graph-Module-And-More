@@ -166,12 +166,6 @@ class Bool_circ_construct_mx:
                     n.set_label(f"b{ib}")
                     ib += 1
             ir = len(add.get_output_ids) - 1
-            outs = add.get_output_ids[::-1]
-            for node in outs:
-                n = G.get_node_by_id(node)
-                if n.get_label[0] == "r":
-                    n.set_label(f"r{ir}")
-                    ir += 1
             rin = add.get_input_ids[-1]
             rin += G.max_id() + 1
             rout = G.get_output_ids[-1]
@@ -183,6 +177,9 @@ class Bool_circ_construct_mx:
         G.set_input_ids(inputs[0::2] +
                         inputs[1::2] +
                         [G.get_input_ids[-1]])
+        for i, o in enumerate(G.get_output_ids[0:-1]):
+            n = G.get_node_by_id(o)
+            n.set_label(f"r{i}")
         return G
 
     @classmethod
