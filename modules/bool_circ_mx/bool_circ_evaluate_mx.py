@@ -26,10 +26,9 @@ class Bool_circ_evaluate_mx:
                 if parent != id:
                     n = self.add_node('')
                     self.add_edge(parent, n)
-            n = self.add_node("0")
-            childet = et.get_children_ids[0]
-            self.add_edge(n, childet)
-            self.remove_nodes_by_id(id, idet, opti=False)
+                    self.remove_edge(parent, idet)
+            et.set_label("0")
+            self.remove_nodes_by_id(id, opti=False)
         if label == "1":
             self.remove_node_by_id(id)
 
@@ -38,8 +37,8 @@ class Bool_circ_evaluate_mx:
         label = node.get_label
         if label != "1" and label != "0":
             raise ValueError(f"Invalid node {n.get_children_ids[0]}")
-        idet = node.get_children_ids[0]
-        ou = self.get_node_by_id(idet)
+        idou = node.get_children_ids[0]
+        ou = self.get_node_by_id(idou)
         if ou.get_label != '|':
             raise ValueError(f"Invalid node {ou.get_id}")
         if label == "1":
@@ -47,10 +46,9 @@ class Bool_circ_evaluate_mx:
                 if parent != id:
                     n = self.add_node('')
                     self.add_edge(parent, n)
-            n = self.add_node("1")
-            childet = ou.get_children_ids[0]
-            self.add_edge(n, childet)
-            self.remove_nodes_by_id(id, idet, opti=False)
+                    self.remove_edge(parent, idou)
+            ou.set_label("1")
+            self.remove_nodes_by_id(id, opti=False)
         if label == "0":
             self.remove_node_by_id(id)
 

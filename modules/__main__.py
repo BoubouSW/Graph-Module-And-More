@@ -6,6 +6,5 @@ if __name__ == '__main__':
     input = Bool_circ.int_to_bites(0b00010011, n = 8)
     
     input.icompose(G)
-    print(input)
     input.evaluate()
     input.save_as_dot_file("test")
