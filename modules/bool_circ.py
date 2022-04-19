@@ -39,3 +39,19 @@ class Bool_circ(open_digraph,
                 else:
                     return False
         return True
+
+    @classmethod
+    def hamming_enc(cls):
+        return cls.parse_parentheses("(x0)^(x1)^(x3)", "(x0)^(x2)^(x3)",
+                                     "(x0)", "(x1)^(x2)^(x3)", "(x1)",
+                                     "(x2)", "(x3)")
+
+    @classmethod
+    def hamming_dec(cls):
+        top: Bool_circ = cls.parse_parentheses("(x0)^(x2)^(x4)^(x6)", "(x1)^(x2)^(x5)^(x6)",
+                                               "(x2)", "(x3)^(x4)^(x5)^(x6)", "(x4)",
+                                               "(x5)", "(x6)")
+        bottom: Bool_circ = cls.parse_parentheses("((x0)&(x1)&(~(x3)))^(x2)",
+                                                  "((x0)&(~(x1))&(x3))^(x4)",
+                                                  "((~(x0))&(x1)&(x3))^(x5)", "((x0)&(x1)&(x3))^(x6)")
+        return top.compose(bottom)
