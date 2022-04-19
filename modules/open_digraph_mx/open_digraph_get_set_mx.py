@@ -99,8 +99,14 @@ class open_digraph_get_set_mx:
         """
         remove an edge between 2 nodes (source -> target)
         """
-        self.get_node_by_id(src).remove_child_once(tgt)
-        self.get_node_by_id(tgt).remove_parent_once(src)
+        src_children_mult = self.nodes[src].get_children_id_mult(tgt)
+        tgt_parent_mult = self.nodes[tgt].get_parent_id_mult(src)
+        if src_children_mult == 1:
+            self.get_node_by_id(src).remove_child_once(tgt)
+            self.get_node_by_id(tgt).remove_parent_once(src)
+        else:
+            self.nodes[tgt].add_parent_id(src, src_children_mult - 1)
+            self.nodes[src].add_child_id(tgt, tgt_parent_mult - 1)
 
     def remove_edges(self, *args: list[(int, int)]) -> None:
         """

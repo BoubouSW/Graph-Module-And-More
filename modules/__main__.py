@@ -2,6 +2,7 @@ from .bool_circ import Bool_circ
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     
     #input = Bool_circ.hamming_dec()
     #print(input)
@@ -23,3 +24,15 @@ if __name__ == '__main__':
 
     G.non_a_travers_xor(n5)
     G.display()
+=======
+    test = Bool_circ.empty()
+    xor1 = test.add_node("")
+    xor2 = test.add_node("^")
+    test.add_edge(xor1, xor2)
+    test.add_edge(xor1, xor2)
+    test.add_input_node(xor1)
+    test.add_input_node(xor2)
+    test.add_input_node(xor2)
+    test.xor_involution(xor1)
+    test.save_as_dot_file("test")
+>>>>>>> 456e034 (add rules simplification)
