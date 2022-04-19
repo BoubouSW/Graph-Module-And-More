@@ -122,3 +122,33 @@ class Bool_circ(open_digraph,
             raise ValueError(f"{id} is not a spliter node")
         for idChild in splitNode.get_children_ids:
             nodeChild = self.get_node_by_id(idChild)
+
+    def non_a_travers_copie(self,id:int):
+        node = self.get_node_by_id(id)
+        if node.get_label != "~":
+            raise ValueError(f"Invalid node")
+        idco = node.get_children_ids[0]
+        copie = self.get_node_by_id(idco)
+        if copie.get_label != "":
+            raise ValueError(f"Not a copie")
+        for child in copie.get_children_ids:
+            print(child)
+            newid = self.add_node("~")
+            self.remove_edge(idco, child)
+            self.add_edge(idco, newid)
+            self.add_edge(newid, child)
+        self.add_edge(node.get_parent_ids[0], idco)
+        self.remove_node_by_id(id)
+    
+    def involution_non(self,id:int):
+        node = self.get_node_by_id(id)
+        if node.get_label != "~":
+            raise ValueError(f"Invalid node")
+        idparent = node.get_parent_ids[0]
+        idno = node.get_children_ids[0]
+        no = self.get_node_by_id(idno)
+        if no.get_label != "~":
+            raise ValueError(f"Not a not")
+        idchild = no.get_children_ids[0]
+        self.remove_nodes_by_id(id,idno)
+        self.add_edge(idparent, idchild)
