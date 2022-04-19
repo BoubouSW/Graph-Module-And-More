@@ -55,3 +55,36 @@ class Bool_circ(open_digraph,
                                                   "((x0)&(~(x1))&(x3))^(x4)",
                                                   "((~(x0))&(x1)&(x3))^(x5)", "((x0)&(x1)&(x3))^(x6)")
         return top.compose(bottom)
+
+
+
+
+    def effacement(self, id:int):
+        node = self.get_node_by_id(id)
+        label = node.get_label
+        if label != "1" and label != "0" and label != "&" and label != "|" and label != "~" and label != "^":
+            raise ValueError(f"Invalid node")
+        child = node.get_children_ids
+        if len(child) != 1:
+            raise ValueError("Node has more than 1 child")
+        if len(self.get_node_by_id(child[0]).get_children_ids) != 0:
+            raise ValueError("Child has 1 child")
+        for parent in node.get_parent_ids:
+            newid = self.add_node("")
+            self.add_edge(parent,newid)
+        self.remove_nodes_by_id(id,child[0])
+
+    def non_a_travers_xor(self, id:int):
+        node = self.get_node_by_id(id)
+        label = node.get_label
+        if label != "~":
+            raise ValueError(f"Invalid node")
+        parent = self.get_node_by_id(node.get_parent_ids[0])
+        xor = self.get_node_by_id(node.get_children_ids[0])
+        self.remove_node_by_id(id)
+        self.add_edge(parent.get_id, xor.get_id)
+        idno = self.add_node("~")
+        child = self.get_node_by_id(xor.get_children_ids[0])
+        self.remove_edge(xor.get_id,child.get_id)
+        self.add_edge(xor.get_id,idno)
+        self.add_edge(idno,child.get_id)
