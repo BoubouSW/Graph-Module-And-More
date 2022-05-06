@@ -56,4 +56,5 @@ class Bool_circ(open_digraph,
         bottom: Bool_circ = cls.parse_parentheses("((x0)&(x1)&(~(x3)))^(x2)",
                                                   "((x0)&(~(x1))&(x3))^(x4)",
                                                   "((~(x0))&(x1)&(x3))^(x5)", "((x0)&(x1)&(x3))^(x6)")
-        return top.compose(bottom)
+        top.icompose(bottom)
+        return top

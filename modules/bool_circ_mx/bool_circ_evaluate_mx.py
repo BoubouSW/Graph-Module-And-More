@@ -92,14 +92,14 @@ class Bool_circ_evaluate_mx:
 
         self.remove_nodes_by_id(id)
 
-    def __switch_gate(self, id: int) -> None:
+    def switch_gate(self, id: int) -> None:
         node = self.get_node_by_id(id)
-        if node.label == '&' or node.label == '|' or node.label == '^':
+        if node.label in ['&', '|', '^']:
             self.__neutral_gate(id)
         else:
             children = node.get_children_ids
             if len(children) != 1:
-                raise ValueError("more than 1 child")
+                return
             label = self.get_node_by_id(children[0]).get_label
             if label == '':
                 self.__copy_gate(id)
@@ -118,11 +118,11 @@ class Bool_circ_evaluate_mx:
             change = False
             for id in self.get_node_ids:
                 n = self.get_node_by_id(id)
-                if n != None and len(n.get_parent_ids) == 0:
-                    if len(n.get_children_ids) == 0:
+                if n != None and n.get_parent_ids:
+                    if n.get_children_ids:
                         self.remove_node_by_id(id)
                         continue
                     if ((n.get_label != "0" and n.get_label != "1") or
                        n.get_children_ids[0] not in self.get_output_ids):
-                        self.__switch_gate(id)
+                        self.switch_gate(id)
                         change = True

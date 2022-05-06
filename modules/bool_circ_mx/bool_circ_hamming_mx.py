@@ -2,7 +2,7 @@ class Bool_circ_hamming_mx:
     def effacement(self, id: int):
         node = self.get_node_by_id(id)
         label = node.get_label
-        if label != "1" and label != "0" and label != "&" and label != "|" and label != "~" and label != "^":
+        if label not in ["1", "0", "&", "|", "~", "^"]:
             raise ValueError(f"Invalid node")
         child = node.get_children_ids
         if len(child) != 1:
@@ -48,10 +48,8 @@ class Bool_circ_hamming_mx:
         if(splitNode.get_label != ""):
             raise ValueError(f"{id} is not a spliter node")
         change = False
-        print(splitNode.get_children_ids)
         for child_id in splitNode.get_children_ids:
             trans = self.get_node_by_id(child_id)
-            print(child_id)
             if trans.get_label == '^':
                 for _ in range(splitNode.get_children_id_mult(child_id)):
                     self.remove_edge(id, child_id)
@@ -65,8 +63,14 @@ class Bool_circ_hamming_mx:
             raise ValueError(f"{id} is not a spliter node")
         for idChild in splitNode.get_children_ids:
             nodeChild = self.get_node_by_id(idChild)
+            if nodeChild.get_label == "":
+                for child in nodeChild.get_children_ids:
+                    for _ in range(
+                            nodeChild.get_children_id_mult(child)):
+                        self.add_edges((id, child))
+                self.remove_node_by_id(idChild, opti=False)
 
-    def non_a_travers_copie(self,id:int):
+    def non_a_travers_copie(self, id: int):
         node = self.get_node_by_id(id)
         if node.get_label != "~":
             raise ValueError(f"Invalid node")
@@ -75,15 +79,14 @@ class Bool_circ_hamming_mx:
         if copie.get_label != "":
             raise ValueError(f"Not a copie")
         for child in copie.get_children_ids:
-            print(child)
             newid = self.add_node("~")
             self.remove_edge(idco, child)
             self.add_edge(idco, newid)
             self.add_edge(newid, child)
         self.add_edge(node.get_parent_ids[0], idco)
         self.remove_node_by_id(id)
-    
-    def involution_non(self,id:int):
+
+    def involution_non(self, id: int):
         node = self.get_node_by_id(id)
         if node.get_label != "~":
             raise ValueError(f"Invalid node")
@@ -93,5 +96,54 @@ class Bool_circ_hamming_mx:
         if no.get_label != "~":
             raise ValueError(f"Not a not")
         idchild = no.get_children_ids[0]
-        self.remove_nodes_by_id(id,idno)
+        self.remove_nodes_by_id(id, idno)
         self.add_edge(idparent, idchild)
+
+    def reduction(self):
+        modify = True
+        while modify:
+            modify = False
+            for node in self.get_node_ids:
+                nodeObj = self.get_node_by_id(node)
+                if nodeObj != None:
+                    if nodeObj.label == "^":
+                        nodeChild = nodeObj.get_children_ids[0]
+                        if self.get_node_by_id(nodeChild).get_label == "^":
+                            self.xor_associativ(node)
+                            modify = True
+                    elif nodeObj.label == "~":
+                        nodeChild = nodeObj.get_children_ids[0]
+                        if self.get_node_by_id(nodeChild).get_label == "^":
+                            self.non_a_travers_xor(node)
+                            modify = True
+                        elif self.get_node_by_id(nodeChild).get_label == "":
+                            self.non_a_travers_copie(node)
+                            modify = True
+                        elif self.get_node_by_id(nodeChild).get_label == "~":
+                            self.involution_non(node)
+                            modify = True
+                    elif nodeObj.label == "":
+                        for child in nodeObj.get_children_ids:
+                            if self.get_node_by_id(child).get_label == "^":
+                                self.xor_involution(node)
+                                modify = True
+                            elif self.get_node_by_id(child).get_label == "":
+                                self.copy_associativ(node)
+                                modify = True
+                    if nodeObj.label in ["1", "0", "&", "|", "~", "^"]:
+                        if len(nodeObj.get_children_ids) == 1:
+                            childObj = self.get_node_by_id(
+                                nodeObj.get_children_ids[0])
+                            if (childObj.get_label == ""
+                                    and not childObj.get_children_ids):
+                                self.effacement(node)
+                                modify = True
+
+                    if len(nodeObj.get_children_ids) == 0:
+                        self.remove_node_by_id(node)
+                        modify = True
+                    elif ((nodeObj.get_label not in ["0", "1"] or
+                           nodeObj.get_children_ids[0] not in self.get_output_ids
+                           ) and len(nodeObj.get_parent_ids) == 0):
+                        self.switch_gate(node)
+                        modify = True
