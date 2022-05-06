@@ -5,16 +5,8 @@ from zmq import XPUB_VERBOSE
 
 
 def gray_code(n: int):
-    """Genereta a gray code of length n
-    rec function:
-    if n == "0":
-        return [""]
-    resL = []
-    resR = []
-    for i in gray_code(n-1):
-        resL += ["0" + i]
-        resR += ["1" + i]
-    return resL + list(reversed(resR))
+    """
+    Generate a gray code of length n
     """
     res = [""]
     for _ in range(n):
@@ -23,7 +15,9 @@ def gray_code(n: int):
 
 
 def K_map(bits: str):
-    """Generate a K map of a given bits string"""
+    """
+    Generate a K map of a given bits string
+    """
     nbVar = math.log2(len(bits))
     if not nbVar.is_integer():
         raise Exception("this table is not a boolean table")
@@ -40,7 +34,9 @@ def K_map(bits: str):
 
 
 def test_box(tab, x, y, w, h):
-    """Test if a box conteint a 0"""
+    """
+    Test if a box conteint a 0
+    """
     cross_one = False
     for j in range(x, x + w):
         for i in range(y, y + h):

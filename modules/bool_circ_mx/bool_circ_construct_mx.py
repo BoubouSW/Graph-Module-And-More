@@ -6,7 +6,10 @@ import modules.utils as ut
 class Bool_circ_construct_mx:
 
     @classmethod
-    def parse_parentheses(cls, *args):
+    def parse_parentheses(cls,*args:str):
+        """
+        creer bool_circ à partir de formule propositionnelle 
+        """
         g = cls.empty()
         oper = ["&", "|", "~", "^", "0", "1", ""]
         inputDiv = {}
@@ -57,6 +60,9 @@ class Bool_circ_construct_mx:
 
     @classmethod
     def from_table(cls, bits: str):
+        """
+        creer bool_circ à partir table de verite
+        """
         nbVar = math.log2(len(bits))
         if not nbVar.is_integer():
             raise Exception("this table is not a boolean table")
@@ -86,6 +92,9 @@ class Bool_circ_construct_mx:
 
     @classmethod
     def from_kmap(cls, bits: str):
+        """
+        creer un bool_circ à partir d'une kmap
+        """
         return cls.parse_parentheses(ut.K_map_prop(bits))
 
     @classmethod
@@ -132,6 +141,9 @@ class Bool_circ_construct_mx:
 
     @classmethod
     def adder(cls, n: int):
+        """
+        creer bool_circ à partir d'un int (creer adder)
+        """
         G = cls.empty()
         ba = G.add_node()
         bb = G.add_node()
@@ -184,6 +196,9 @@ class Bool_circ_construct_mx:
 
     @classmethod
     def half_adder(cls, n: int):
+        """
+        creer bool_circ à partir d'un int (creer demi-adder)
+        """
         G = cls.adder(n)
         inlst = G.get_input_ids
         reg = inlst[-1]
@@ -193,7 +208,10 @@ class Bool_circ_construct_mx:
         return G
 
     @classmethod
-    def int_to_bites(cls, i: int, n: int = 8):
+    def int_to_binary(cls, i: int, n: int = 8):
+        """
+        creer un bool_circ à partir d'un entier et du nb de bits pour encoder
+        """
         bites = bin(i)[2:]
         if len(bites) > n:
             raise ValueError("The number is too big")
@@ -204,3 +222,26 @@ class Bool_circ_construct_mx:
             id = G.add_node(b)
             G.add_output_node(id)
         return G
+    
+    @classmethod
+    def hamming_enc(cls):
+        """
+        creer encodeur hamming
+        """
+        return cls.parse_parentheses("(x0)^(x1)^(x3)", "(x0)^(x2)^(x3)",
+                                     "(x0)", "(x1)^(x2)^(x3)", "(x1)",
+                                     "(x2)", "(x3)")
+
+    @classmethod
+    def hamming_dec(cls):
+        """
+        creer decodeur hamming
+        """
+        top: Bool_circ = cls.parse_parentheses("(x0)^(x2)^(x4)^(x6)", "(x1)^(x2)^(x5)^(x6)",
+                                               "(x2)", "(x3)^(x4)^(x5)^(x6)", "(x4)",
+                                               "(x5)", "(x6)")
+        bottom: Bool_circ = cls.parse_parentheses("((x0)&(x1)&(~(x3)))^(x2)",
+                                                  "((x0)&(~(x1))&(x3))^(x4)",
+                                                  "((~(x0))&(x1)&(x3))^(x5)", "((x0)&(x1)&(x3))^(x6)")
+        top.icompose(bottom)
+        return top

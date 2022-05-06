@@ -30,9 +30,6 @@ class Bool_circ_hamming_mx:
         self.add_edge(idno, child.get_id)
 
     def xor_associativ(self, id: int):
-        """
-        xor associativ
-        """
         xorNode1 = self.get_node_by_id(id)
         if(xorNode1.get_label != "^"):
             raise ValueError(f"{id} is not a ^")

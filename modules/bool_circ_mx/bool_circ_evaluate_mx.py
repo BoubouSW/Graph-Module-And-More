@@ -1,4 +1,5 @@
 class Bool_circ_evaluate_mx:
+    
     def __copy_gate(self, id: int):
         node = self.get_node_by_id(id)
         if node.get_label != "1" and node.get_label != "0":
@@ -93,6 +94,9 @@ class Bool_circ_evaluate_mx:
         self.remove_nodes_by_id(id)
 
     def switch_gate(self, id: int) -> None:
+        """
+        check which gate it is
+        """
         node = self.get_node_by_id(id)
         if node.label in ['&', '|', '^']:
             self.__neutral_gate(id)
@@ -113,6 +117,9 @@ class Bool_circ_evaluate_mx:
                 self.__xor_gate(id)
 
     def evaluate(self) -> None:
+        """
+        simplifies the graph from the above rules
+        """
         change = True
         while change:
             change = False
