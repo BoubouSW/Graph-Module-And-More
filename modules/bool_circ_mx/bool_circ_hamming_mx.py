@@ -51,11 +51,10 @@ class Bool_circ_hamming_mx:
         for child_id in splitNode.get_children_ids:
             trans = self.get_node_by_id(child_id)
             if trans.get_label == '^':
+                change = True
+                print(child_id, "OK", id)
                 for _ in range(splitNode.get_children_id_mult(child_id)):
                     self.remove_edge(id, child_id)
-                    change = True
-        if not change:
-            raise ValueError(f"{id} doesn't have xor child")
 
     def copy_associativ(self, id: int):
         splitNode = self.get_node_by_id(id)
@@ -105,7 +104,7 @@ class Bool_circ_hamming_mx:
             modify = False
             for node in self.get_node_ids:
                 nodeObj = self.get_node_by_id(node)
-                if nodeObj != None:
+                if nodeObj != None and nodeObj.get_children_ids:
                     if nodeObj.label == "^":
                         nodeChild = nodeObj.get_children_ids[0]
                         if self.get_node_by_id(nodeChild).get_label == "^":
@@ -124,6 +123,8 @@ class Bool_circ_hamming_mx:
                             modify = True
                     elif nodeObj.label == "":
                         for child in nodeObj.get_children_ids:
+                            if self.get_node_by_id(child) != None:
+                                continue
                             if self.get_node_by_id(child).get_label == "^":
                                 self.xor_involution(node)
                                 modify = True
@@ -144,6 +145,8 @@ class Bool_circ_hamming_mx:
                         modify = True
                     elif ((nodeObj.get_label not in ["0", "1"] or
                            nodeObj.get_children_ids[0] not in self.get_output_ids
-                           ) and len(nodeObj.get_parent_ids) == 0):
+                           ) and len(nodeObj.get_parent_ids) == 0
+                          and node not in self.get_input_ids):
+                        print(self.get_node_by_id(node).get_label)
                         self.switch_gate(node)
                         modify = True
