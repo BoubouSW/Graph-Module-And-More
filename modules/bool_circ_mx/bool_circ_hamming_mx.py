@@ -1,3 +1,6 @@
+from modules import Node
+
+
 class Bool_circ_hamming_mx:
     def effacement(self, id: int):
         node = self.get_node_by_id(id)
